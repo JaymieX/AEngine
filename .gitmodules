@@ -1,0 +1,6 @@
+[submodule "AEngine/external/glfw"]
+	path = AEngine/external/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "AEngine/external/glm"]
+	path = AEngine/external/glm
+	url = https://github.com/g-truc/glm.git
