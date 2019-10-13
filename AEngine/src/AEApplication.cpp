@@ -1,11 +1,16 @@
 #include <AEpch.h>
 #include "AEApplication.h"
+#include "Window.h"
+#include "EntityComponent.h"
 
 AEApplication::AEApplication()
-{ }
+{ 
+
+}
 
 AEApplication::~AEApplication() 
 {  
+	entityManager.reset();
 	windowPtr.reset();
 	glfwTerminate();
 }
@@ -18,6 +23,7 @@ bool AEApplication::Initialize()
 		return false;
 	}
 
+	entityManager = std::make_unique<EntityManager>();
 	windowPtr = std::make_unique<Window>();
 	windowPtr->Create("AEngine", std::make_pair(800, 600));
 
@@ -35,4 +41,15 @@ void AEApplication::Run()
 		glfwPollEvents();
 		glfwSwapBuffers(windowPtr->GetWindow());
 	}
+}
+
+void AEApplication::Update()
+{
+	entityManager->Update();
+	entityManager->SeekAndDestroy();
+}
+
+void AEApplication::Render()
+{
+	entityManager->Render();
 }

@@ -2,13 +2,27 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\AEpch.cpp" />
     <ClCompile Include="src\AEApplication.cpp" />
+    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\CubeScene.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\ObjLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\AEpch.h" />
     <ClInclude Include="src\AEApplication.h" />
+    <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\IScene.h" />
+    <ClInclude Include="src\CubeScene.h" />
+    <ClInclude Include="src\GameObject.h" />
+    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\ObjLoader.h" />
+    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\EntityComponent.h" />
   </ItemGroup>
 </Project>

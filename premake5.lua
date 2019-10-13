@@ -1,5 +1,14 @@
+local BUILD_DIR = path.join("build", _ACTION)
+if _OPTIONS["cc"] ~= nil then
+	BUILD_DIR = BUILD_DIR .. "_" .. _OPTIONS["cc"]
+end
+
+local GLFW_DIR = "AEngine/external/glfw"
+local GLAD_DIR = "AEngine/external/glad"
+
 workspace "AEngine"
-	architecture "x64"
+	architecture "x86_64"
+	platforms "x86_64"
 
 	configurations {
 		"Debug",
@@ -7,9 +16,6 @@ workspace "AEngine"
 	}
 
 outputdir = "%{cfg.system}_%{cfg.buildcfg:lower()}_%{cfg.architecture}"
-
-local GLFW_DIR = "AEngine/external/glfw"
-local GLAD_DIR = "AEngine/external/glad"
 
 project "AEngine"
 	location "AEngine"
@@ -21,7 +27,7 @@ project "AEngine"
 	objdir ("build/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "AEpch.h"
-	pchsource "%{prj.name}/src/AEpch.cpp"
+	pchsource "AEngine/src/AEpch.cpp"
 
 	files
 	{
@@ -48,6 +54,8 @@ project "AEngine"
 		staticruntime "On"
 		systemversion "latest"
 
+		links { "gdi32", "kernel32", "psapi" }
+
 	filter "configurations:Debug"
 		symbols "On"
 		optimize "Debug"
@@ -55,49 +63,6 @@ project "AEngine"
 	filter "configurations:Release"
 		symbols "Off"
 		optimize "Full"
-
-
-project "glfw"
-	kind "StaticLib"
-	language "C"
-	location (GLFW_DIR)
-
-	targetdir (GLFW_DIR .. "/bin/" .. outputdir .. "/%{prj.name}")
-	objdir (GLFW_DIR .. "/build/" .. outputdir .. "/%{prj.name}")
-
-	files
-	{
-		path.join(GLFW_DIR, "include/GLFW/*.h"),
-		path.join(GLFW_DIR, "src/context.c"),
-		path.join(GLFW_DIR, "src/egl_context.*"),
-		path.join(GLFW_DIR, "src/init.c"),
-		path.join(GLFW_DIR, "src/input.c"),
-		path.join(GLFW_DIR, "src/internal.h"),
-		path.join(GLFW_DIR, "src/monitor.c"),
-		path.join(GLFW_DIR, "src/osmesa_context.*"),
-		path.join(GLFW_DIR, "src/vulkan.c"),
-		path.join(GLFW_DIR, "src/window.c"),
-	}
-	includedirs { path.join(GLFW_DIR, "include") }
-	filter "system:windows"
-		defines "_GLFW_WIN32"
-		files
-		{
-			path.join(GLFW_DIR, "src/win32_*.*"),
-			path.join(GLFW_DIR, "src/wgl_context.*")
-		}
-	filter "system:linux"
-		defines "_GLFW_X11"
-		files
-		{
-			path.join(GLFW_DIR, "src/glx_context.*"),
-			path.join(GLFW_DIR, "src/linux*.*"),
-			path.join(GLFW_DIR, "src/posix*.*"),
-			path.join(GLFW_DIR, "src/x11*.*"),
-			path.join(GLFW_DIR, "src/xkb*.*")
-		}
-	filter "action:vs*"
-		defines "_CRT_SECURE_NO_WARNINGS"
 
 project "glad"
 	kind "StaticLib"
@@ -131,4 +96,47 @@ project "glad"
 	filter "action:vs*"
 		defines "_CRT_SECURE_NO_WARNINGS"
 
+project "glfw"
+	kind "StaticLib"
+	language "C"
+	location (GLFW_DIR)
 
+	targetdir (GLFW_DIR .. "/bin/" .. outputdir .. "/%{prj.name}")
+	objdir (GLFW_DIR .. "/build/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		path.join(GLFW_DIR, "include/GLFW/*.h"),
+		path.join(GLFW_DIR, "src/context.c"),
+		path.join(GLFW_DIR, "src/egl_context.*"),
+		path.join(GLFW_DIR, "src/init.c"),
+		path.join(GLFW_DIR, "src/input.c"),
+		path.join(GLFW_DIR, "src/internal.h"),
+		path.join(GLFW_DIR, "src/monitor.c"),
+		path.join(GLFW_DIR, "src/osmesa_context.*"),
+		path.join(GLFW_DIR, "src/vulkan.c"),
+		path.join(GLFW_DIR, "src/window.c"),
+	}
+
+	includedirs { path.join(GLFW_DIR, "include") }
+
+	filter "system:windows"
+		defines "_GLFW_WIN32"
+		files
+		{
+			path.join(GLFW_DIR, "src/win32_*.*"),
+			path.join(GLFW_DIR, "src/wgl_context.*")
+		}
+	filter "system:linux"
+		defines "_GLFW_X11"
+		files
+		{
+			path.join(GLFW_DIR, "src/glx_context.*"),
+			path.join(GLFW_DIR, "src/linux*.*"),
+			path.join(GLFW_DIR, "src/posix*.*"),
+			path.join(GLFW_DIR, "src/x11*.*"),
+			path.join(GLFW_DIR, "src/xkb*.*")
+		}
+	filter "action:vs*"
+		defines "_CRT_SECURE_NO_WARNINGS"
+		
