@@ -1,7 +1,7 @@
-#include <AEpch.h>
+#include <Core/AEpch.h>
 #include "GameObject.h"
-#include "Model.h"
-#include "Shader.h"
+#include "Graphics/Model.h"
+#include "Graphics/Shader.h"
 
 GameObject::GameObject(Model* model, Shader* shader) : 
 	model(model), shader(shader)

@@ -57,12 +57,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>AEpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core/AEpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>src;external\glm\glm;external\glad\include;external\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -74,7 +74,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>AEpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core/AEpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>src;external\glm\glm;external\glad\include;external\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
@@ -95,31 +95,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\AEApplication.h" />
-    <ClInclude Include="src\AEpch.h" />
-    <ClInclude Include="src\CubeScene.h" />
-    <ClInclude Include="src\EntityComponent.h" />
+    <ClInclude Include="src\Core\AEApplication.h" />
+    <ClInclude Include="src\Core\AEpch.h" />
+    <ClInclude Include="src\Core\Timer.h" />
     <ClInclude Include="src\GameObject.h" />
-    <ClInclude Include="src\IScene.h" />
-    <ClInclude Include="src\Mesh.h" />
-    <ClInclude Include="src\Model.h" />
-    <ClInclude Include="src\ObjLoader.h" />
-    <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\Graphics\Mesh.h" />
+    <ClInclude Include="src\Graphics\Model.h" />
+    <ClInclude Include="src\Graphics\ObjLoader.h" />
+    <ClInclude Include="src\Graphics\Shader.h" />
+    <ClInclude Include="src\Scene\CubeScene.h" />
+    <ClInclude Include="src\Scene\IScene.h" />
+    <ClInclude Include="src\Systems\EntityComponent.h" />
+    <ClInclude Include="src\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AEApplication.cpp" />
-    <ClCompile Include="src\AEpch.cpp">
+    <ClCompile Include="src\Core\AEApplication.cpp" />
+    <ClCompile Include="src\Core\AEpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\CubeScene.cpp" />
+    <ClCompile Include="src\Core\main.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
-    <ClCompile Include="src\Mesh.cpp" />
-    <ClCompile Include="src\Model.cpp" />
-    <ClCompile Include="src\ObjLoader.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\Window.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Graphics\Mesh.cpp" />
+    <ClCompile Include="src\Graphics\Model.cpp" />
+    <ClCompile Include="src\Graphics\ObjLoader.cpp" />
+    <ClCompile Include="src\Graphics\Shader.cpp" />
+    <ClCompile Include="src\Scene\CubeScene.cpp" />
+    <ClCompile Include="src\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="external\glad\glad.vcxproj">

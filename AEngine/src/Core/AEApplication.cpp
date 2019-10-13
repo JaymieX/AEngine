@@ -1,7 +1,7 @@
-#include <AEpch.h>
+#include <Core/AEpch.h>
 #include "AEApplication.h"
-#include "Window.h"
-#include "EntityComponent.h"
+#include "Window/Window.h"
+#include "Systems/EntityComponent.h"
 
 AEApplication::AEApplication()
 { 

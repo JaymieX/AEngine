@@ -1,4 +1,4 @@
-#include <AEpch.h>
+#include <Core/AEpch.h>
 #include "Mesh.h"
 
 Mesh::Mesh(GLenum drawmode, std::vector<Vertex*>& verticies) :

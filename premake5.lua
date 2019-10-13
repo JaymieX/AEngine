@@ -26,8 +26,8 @@ project "AEngine"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("build/" .. outputdir .. "/%{prj.name}")
 
-	pchheader "AEpch.h"
-	pchsource "AEngine/src/AEpch.cpp"
+	pchheader "Core/AEpch.h"
+	pchsource "AEngine/src/Core/AEpch.cpp"
 
 	files
 	{
@@ -59,10 +59,12 @@ project "AEngine"
 	filter "configurations:Debug"
 		symbols "On"
 		optimize "Debug"
+		runtime "Debug"
 
 	filter "configurations:Release"
 		symbols "Off"
 		optimize "Full"
+		runtime "Release"
 
 project "glad"
 	kind "StaticLib"
@@ -121,6 +123,7 @@ project "glfw"
 	includedirs { path.join(GLFW_DIR, "include") }
 
 	filter "system:windows"
+		staticruntime "On"
 		defines "_GLFW_WIN32"
 		files
 		{

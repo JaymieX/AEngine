@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IScene.h"
+#include "Scene/IScene.h"
 
 class CubeScene : public IScene
 {

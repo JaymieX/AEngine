@@ -8,6 +8,9 @@
 #include <functional>
 #include <bitset>
 #include <array>
+#include <ctime>
+#include <ratio>
+#include <chrono>
 
 #include <string>
 #include <vector>

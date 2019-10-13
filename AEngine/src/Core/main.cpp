@@ -1,5 +1,5 @@
-#include "AEpch.h"
-#include "AEApplication.h"
+#include <Core/AEpch.h>
+#include "Core/AEApplication.h"
 
 int main() {
 
