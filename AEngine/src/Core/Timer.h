@@ -2,6 +2,7 @@
 
 #include <Core/AEpch.h>
 #include "AEApplication.h"
+#include "Logger.h"
 
 class Timer 
 {
@@ -31,8 +32,7 @@ public:
 
 		if (currentTime - tickTime >= 1.0)
 		{
-			std::cout << frames << "fps | " << 1000.0 / double(frames) << "ms";
-			std::cout << " Dt " << deltaTime * 1000 << "ms" << std::endl;
+			LOG_TRACE(std::to_string(frames) + "fps | " + std::to_string(deltaTime * 1000) + "ms", __FILE__, __LINE__);
 			tickTime += 1.0;
 			frames = 0;
 		}

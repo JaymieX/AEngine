@@ -50,6 +50,7 @@
       <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Timer.h" />
+    <ClInclude Include="src\Core\Logger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\AEApplication.cpp">
@@ -80,5 +81,6 @@
     <ClCompile Include="src\Window\Window.cpp">
       <Filter>Window</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Logger.cpp" />
   </ItemGroup>
 </Project>

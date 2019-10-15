@@ -3,6 +3,7 @@
 #include "Window/Window.h"
 #include "Core/Timer.h"
 #include "Systems/EntityComponent.h"
+#include "Core/Logger.h"
 
 AEApplication::AEApplication()
 { 
@@ -11,6 +12,7 @@ AEApplication::AEApplication()
 
 AEApplication::~AEApplication() 
 {  
+	scenePtr.reset();
 	entityManager.reset();
 	windowPtr.reset();
 	glfwTerminate();
@@ -18,6 +20,8 @@ AEApplication::~AEApplication()
 
 bool AEApplication::Initialize() 
 {
+	LOG_INIT();
+
 	if (glfwInit() == GLFW_FALSE)
 	{
 		std::cout << "Failed to initialize GLFW" << std::endl;
@@ -28,7 +32,7 @@ bool AEApplication::Initialize()
 	windowPtr = std::make_unique<Window>();
 	windowPtr->Create("AEngine", std::make_pair(800, 600));
 
-	graphicsTimerPtr = std::make_unique<Timer>(60.0);
+	graphicsTimerPtr = std::make_unique<Timer>(90.0);
 	graphicsTimerPtr->SetTimerAction(&AEApplication::Update, this);
 
 	//audioTimerPtr = std::make_unique<Timer>(400.0);
@@ -39,6 +43,8 @@ bool AEApplication::Initialize()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return false;
 	}
+
+	BuildScene();
 }
 
 void AEApplication::Run() 
@@ -66,4 +72,9 @@ void AEApplication::AudioUpdate()
 void AEApplication::Render()
 {
 	entityManager->Render();
+}
+
+void AEApplication::BuildScene(const unsigned int buildIndex)
+{
+	scenePtr.reset();
 }

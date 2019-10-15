@@ -23,7 +23,7 @@ bool Window::Create(std::string name, std::pair<GLuint, GLuint> dimensions)
 	}
 
 	glfwMakeContextCurrent(window);
-	SetVSync(true);
+	SetVSync(false);
 
 	return true;
 }

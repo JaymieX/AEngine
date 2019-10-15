@@ -13,11 +13,15 @@ public:
 	void Run();
 
 private:
+	void BuildScene(const unsigned int = 0);
 	void Update();
 	void AudioUpdate();
 	void Render();
 
 private:
+	std::vector<class Scene*> scenes;
+
+	std::unique_ptr<class Scene> scenePtr;
 	std::unique_ptr<class Timer> graphicsTimerPtr;
 	std::unique_ptr<class Timer> audioTimerPtr;
 	std::unique_ptr<class Window> windowPtr;
