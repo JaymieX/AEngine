@@ -4,6 +4,8 @@
 #include "Core/Timer.h"
 #include "Systems/EntityComponent.h"
 #include "Core/Logger.h"
+#include "Scene/IScene.h"
+#include "Scene/CubeScene.h"
 
 AEApplication::AEApplication()
 { 
@@ -35,8 +37,8 @@ bool AEApplication::Initialize()
 	graphicsTimerPtr = std::make_unique<Timer>(90.0);
 	graphicsTimerPtr->SetTimerAction(&AEApplication::Update, this);
 
-	//audioTimerPtr = std::make_unique<Timer>(400.0);
-	//audioTimerPtr->SetTimerAction(&AEApplication::AudioUpdate, this);
+	audioTimerPtr = std::make_unique<Timer>(256.0);
+	audioTimerPtr->SetTimerAction(&AEApplication::AudioUpdate, this);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -44,15 +46,22 @@ bool AEApplication::Initialize()
 		return false;
 	}
 
+	scenes.push_back(new CubeScene());
+
 	BuildScene();
+
+	return true;
 }
 
 void AEApplication::Run() 
 {
 	while (!glfwWindowShouldClose(windowPtr->GetWindow()))
 	{
+
 		graphicsTimerPtr->Update();
-		//audioTimerPtr->Update();
+		audioTimerPtr->Update();
+
+		Render();
 	}
 }
 
@@ -62,19 +71,26 @@ void AEApplication::Update()
 	glfwSwapBuffers(windowPtr->GetWindow());
 	entityManager->Update();
 	entityManager->SeekAndDestroy();
+
+	if (sceneActive)
+		scenePtr->Update(static_cast<float>(graphicsTimerPtr->GetDeltaTime()));
 }
 
 void AEApplication::AudioUpdate()
 {
-
+	//LOG_INFO("Audio Updating...", __FILE__, __LINE__);
 }
 
 void AEApplication::Render()
 {
 	entityManager->Render();
+
+	if (sceneActive)
+		scenePtr->Render();
 }
 
 void AEApplication::BuildScene(const unsigned int buildIndex)
 {
-	scenePtr.reset();
+	scenePtr.reset(scenes[buildIndex]);
+	sceneActive = scenePtr->Initialize();
 }
