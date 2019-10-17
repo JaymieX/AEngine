@@ -6,13 +6,11 @@ class CubeScene : public IScene
 {
 public: 
 	explicit CubeScene();
-	virtual ~CubeScene();
+	virtual ~CubeScene() override;
 
-	virtual bool Create() override;
-	virtual void Destroy() override;
+	virtual bool Initialize() override;
 	virtual void Update(const float dt) override;
 	virtual void Render() const override;
 
 private:
-	std::unique_ptr<class GameObject> cubeObjPtr;
 };

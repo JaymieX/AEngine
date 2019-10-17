@@ -38,7 +38,7 @@ public:
 
 class Entity
 {
-public:
+public:	
 	void Update()
 	{
 		for (auto& c : components) c->Update();
@@ -120,7 +120,7 @@ public:
 	Entity& CreateAndAddEntity()
 	{
 		Entity* entity = new Entity();
-		std::unique_ptr<Entity> entityPtr{ entity };
+		std::unique_ptr<Entity> entityPtr {entity};
 		entities.emplace_back(std::move(entityPtr));
 		return *entity;
 	}

@@ -7,6 +7,7 @@ using namespace glm;
 class GameObject
 {
 public:
+	GameObject() = default;
 	GameObject(Model*, Shader*);
 	~GameObject();
 

@@ -2,17 +2,15 @@
 #include "Mesh.h"
 #include "Model.h"
 
-Model::Model() : meshes(std::vector<Mesh*>()) { }
+Model::Model() : meshRenderers(std::vector<MeshRenderer*>()) { }
 
 Model::~Model()
 {
-	for (auto mesh : meshes)
-		delete mesh;
-	meshes.clear();
+	meshRenderers.clear();
 }
 
 void Model::Render()
 {
-	for (auto mesh : meshes)
-		if (mesh) mesh->Render();
+	for (auto mr : meshRenderers)
+		if (mr) mr->Render();
 }

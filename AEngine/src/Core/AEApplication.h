@@ -19,9 +19,11 @@ private:
 	void Render();
 
 private:
-	std::vector<class Scene*> scenes;
+	bool sceneActive = false;
 
-	std::unique_ptr<class Scene> scenePtr;
+	std::vector<class IScene*> scenes;
+
+	std::unique_ptr<class IScene> scenePtr;
 	std::unique_ptr<class Timer> graphicsTimerPtr;
 	std::unique_ptr<class Timer> audioTimerPtr;
 	std::unique_ptr<class Window> windowPtr;

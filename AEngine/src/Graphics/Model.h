@@ -1,17 +1,15 @@
 #pragma once
 
-class Mesh;
-
 class Model
 {
 public:
 	Model();
    ~Model();
 
-   inline void AddMesh(Mesh* mesh) { meshes.push_back(mesh); }
+   inline void AddMesh(class MeshRenderer* mr) { meshRenderers.push_back(mr); }
 
    void Render();
 
 private:
-	std::vector<Mesh*> meshes;
+	std::vector<class MeshRenderer*> meshRenderers;
 };

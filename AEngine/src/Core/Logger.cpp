@@ -7,7 +7,7 @@ std::string Logger::msg;
 void Logger::Initialize()
 {
 	std::ofstream out;
-	out.open("GameLog.txt", std::ios::out);
+	out.open("AEngineLog.txt", std::ios::out);
 	out.close();
 }
 
