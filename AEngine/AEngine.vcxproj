@@ -116,8 +116,8 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Core\Logger.cpp" />
-    <ClCompile Include="src\Core\main.cpp" />
     <ClCompile Include="src\Core\Utils.cpp" />
+    <ClCompile Include="src\Core\main.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Graphics\Mesh.cpp" />
     <ClCompile Include="src\Graphics\Model.cpp" />
@@ -133,10 +133,6 @@
     <ProjectReference Include="external\glfw\glfw.vcxproj">
       <Project>{9563977C-819A-980D-2A87-7E10169D140F}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="fragCubeShader.glsl" />
-    <None Include="vertCubeShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
