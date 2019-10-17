@@ -37,14 +37,16 @@ bool AEApplication::Initialize()
 	graphicsTimerPtr = std::make_unique<Timer>(90.0);
 	graphicsTimerPtr->SetTimerAction(&AEApplication::Update, this);
 
-	audioTimerPtr = std::make_unique<Timer>(256.0);
-	audioTimerPtr->SetTimerAction(&AEApplication::AudioUpdate, this);
+	//audioTimerPtr = std::make_unique<Timer>(256.0);
+	//audioTimerPtr->SetTimerAction(&AEApplication::AudioUpdate, this);
 
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return false;
 	}
+
+	glViewport(0, 0, windowPtr->GetWidth(), windowPtr->GetHeight());
 
 	scenes.push_back(new CubeScene());
 
@@ -53,19 +55,18 @@ bool AEApplication::Initialize()
 	return true;
 }
 
-void AEApplication::Run() 
+void AEApplication::Run() const
 {
 	while (!glfwWindowShouldClose(windowPtr->GetWindow()))
 	{
-
 		graphicsTimerPtr->Update();
-		audioTimerPtr->Update();
+		//audioTimerPtr->Update();
 
 		Render();
 	}
 }
 
-void AEApplication::Update()
+void AEApplication::Update() const
 {
 	glfwPollEvents();
 	glfwSwapBuffers(windowPtr->GetWindow());
@@ -76,13 +77,16 @@ void AEApplication::Update()
 		scenePtr->Update(static_cast<float>(graphicsTimerPtr->GetDeltaTime()));
 }
 
-void AEApplication::AudioUpdate()
+void AEApplication::AudioUpdate() const
 {
 	//LOG_INFO("Audio Updating...", __FILE__, __LINE__);
 }
 
-void AEApplication::Render()
+void AEApplication::Render() const
 {
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	
 	entityManager->Render();
 
 	if (sceneActive)

@@ -6,8 +6,7 @@
 GameObject::GameObject(Model* model, Shader* shader) : 
 	model(model), shader(shader)
 {
-	transformMatrixID = shader->getUniformID("modelMatrix");
-	normalMatrixID = shader->getUniformID("normalMatrix");
+	
 }
 
 GameObject::~GameObject()

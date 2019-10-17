@@ -8,24 +8,36 @@ Mesh::~Mesh()
 	verticies.clear();
 }
 
-MeshRenderer::MeshRenderer(Mesh* meshPtr, GLenum drawmode) : 
-	meshPtr(meshPtr), drawmode(drawmode), vao(0), vbo(0) {}
+MeshRenderer::MeshRenderer(GLenum drawMode) : drawMode(drawMode),
+                                              vao(0), vbo(0) {}
 
 MeshRenderer::~MeshRenderer()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glDeleteBuffers(1, &vbo);
 	glDeleteVertexArrays(1, &vao);
+}
 
-	delete meshPtr;
+void MeshRenderer::Start()
+{
+	mesh = owner->getComponent<Mesh>();
+	GenBuffers();
+}
+
+void MeshRenderer::Render()
+{
+	glBindVertexArray(vao);
+	const auto size = static_cast<GLsizei>(mesh.verticies.size() * sizeof(Vertex));
+	glDrawArrays(drawMode, 0, size);
+	glBindVertexArray(0);
 }
 
 void MeshRenderer::GenBuffers()
 {
-	const int postionID = 0;
-	const int normalID = 1;
-	const int colorID = 2;
-	const int uvCoordsID = 3;
+	const auto positionId = 0;
+	const auto normalId = 1;
+	const auto colorId = 2;
+	const auto uvCoordsId = 3;
 
 	//Create & Bind Vertex Array Object
 	glGenVertexArrays(1, &vao);
@@ -34,29 +46,26 @@ void MeshRenderer::GenBuffers()
 	//Create & Bind Vertex Buffer Object
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, meshPtr->verticies.size() * sizeof(Vertex), meshPtr->verticies.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mesh.verticies.size() * sizeof(Vertex), mesh.verticies.data(), GL_STATIC_DRAW);
 
 	// Position Attribute
-	glVertexAttribPointer(postionID, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(postionID);
+	glVertexAttribPointer(positionId, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<GLvoid*>(nullptr));
+	glEnableVertexAttribArray(positionId);
 
 	//Normal Attribute
-	glVertexAttribPointer(normalID, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(normalID);
+	glVertexAttribPointer(normalId, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<GLvoid*>(offsetof(Vertex, normal)));
+	glEnableVertexAttribArray(normalId);
 
 	//Color Attribute
-	glVertexAttribPointer(colorID, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(colorID);
+	glVertexAttribPointer(colorId, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<GLvoid*>(offsetof(Vertex, color)));
+	glEnableVertexAttribArray(colorId);
 
 	//Texture Coordinate Attribute
-	glVertexAttribPointer(uvCoordsID, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)(9 * sizeof(float)));
-	glEnableVertexAttribArray(uvCoordsID);
+	glVertexAttribPointer(uvCoordsId, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), reinterpret_cast<GLvoid*>(offsetof(Vertex, uvCoords)));
+	glEnableVertexAttribArray(uvCoordsId);
 
-}
-
-void MeshRenderer::Render()
-{
-	glBindVertexArray(vao);
-	glDrawArrays(drawmode, 0, static_cast<GLsizei>(meshPtr->verticies.size() * sizeof(Vertex)));
 	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+
+

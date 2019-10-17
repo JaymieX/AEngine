@@ -6,35 +6,39 @@ using namespace glm;
 
 struct Vertex {
 	vec3 position;
-	vec3 normals;
+	vec3 normal;
 	vec3 color;
 	vec2 uvCoords;
 };
 
-struct Mesh
+struct Mesh final : public Component
 {
 public:
+	Mesh() = default;
 	Mesh(std::vector<Vertex*>&);
+	
    ~Mesh();
 
 	std::vector<Vertex*> verticies;
 	std::vector<GLuint> indices;
 };
 
-class MeshRenderer : public Component
+class MeshRenderer final : public Component
 {
 public:
-	MeshRenderer(Mesh*, GLenum);
-	~MeshRenderer() override;
+	MeshRenderer() = default;
+	MeshRenderer(GLenum);
+	
+   ~MeshRenderer() override;
 
-	void Start() override { GenBuffers(); }
+	void Start() override;
 	void Render() override;
 
-	GLenum drawmode;
+	GLenum drawMode;
 
 private:
 	GLuint vao, vbo;
-	Mesh* meshPtr;
+	Mesh mesh;
 
 	void GenBuffers();
 };

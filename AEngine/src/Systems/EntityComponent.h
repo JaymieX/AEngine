@@ -15,7 +15,7 @@ inline ComponentTypeID getComponentTypeID()
 
 template <typename T> inline ComponentTypeID getComponentTypeID() noexcept
 {
-	static ComponentID typeID = getComponentTypeID();
+	static ComponentTypeID typeID = getComponentTypeID();
 	return typeID;
 }
 
@@ -27,7 +27,8 @@ using ComponentArray = std::array<Component*, maxComponents>;
 class Component
 {
 public:
-	virtual ~Component() {}
+	Component() : owner(nullptr) { }
+	virtual ~Component() = default;
 
 	virtual void Start() {};
 	virtual void Update() {};
@@ -39,6 +40,15 @@ public:
 class Entity
 {
 public:	
+	Entity() = default;
+	
+	Entity(Entity&& entity) noexcept :
+		components(std::move(entity.components)),
+		componentArray(entity.componentArray),
+		componentBitset(entity.componentBitset),
+		active(entity.active) { }
+
+
 	void Update()
 	{
 		for (auto& c : components) c->Update();
@@ -51,23 +61,26 @@ public:
 
 	void Destroy() { active = false; }
 
-	bool isActive() const { return active; }
+	[[nodiscard]] bool isActive() const { return active; }
 
-	template <typename T> bool hasComponent() const
+	template <typename T>
+	[[nodiscard]] bool hasComponent() const
 	{
-		return componentBitset[getComponentID<T>];
+		return componentBitset[getComponentTypeID<T>];
 	}
 
 	template <typename T, typename ...TArgs>
-	T& addComponent(TArgs&& ... componentArgs)
+	Component& addComponent(TArgs&& ... componentArgs)
 	{
-		T* c(new T(std::forward<TArgs>(componentArgs)...));
-		c->entity = this;
-		std::unique_ptr<Component> newComponentPtr{ c };
+		std::unique_ptr<T> newComponentPtr = std::make_unique<T>(std::forward<TArgs>(componentArgs)...);
+		newComponentPtr->owner = this;
+
 		components.emplace_back(std::move(newComponentPtr));
 
+		auto c = components.at(components.size() - 1).get();
+
 		componentArray[getComponentTypeID<T>()] = c;
-		ComponentBitset[getComponentTypeID<T>()] = true;
+		componentBitset[getComponentTypeID<T>()] = true;
 
 		c->Start();
 		return *c;
@@ -117,12 +130,11 @@ public:
 		), std::end(entities));
 	}
 
-	Entity& CreateAndAddEntity()
+	Entity* CreateAndAddEntity()
 	{
-		Entity* entity = new Entity();
-		std::unique_ptr<Entity> entityPtr {entity};
+		std::unique_ptr<Entity> entityPtr = std::make_unique<Entity>();
 		entities.emplace_back(std::move(entityPtr));
-		return *entity;
+		return entities.at(entities.size() - 1).get();
 	}
 
 private:

@@ -17,12 +17,9 @@ public:
 
 	// ====================================================
 
-	inline GLFWwindow* GetWindow() const { return window; }
-
-	inline std::pair<GLuint, GLuint> GetDimensions() const
-	{
-		return std::make_pair(width, height);
-	}
+	[[nodiscard]] inline GLFWwindow* GetWindow() const { return window; }
+	[[nodiscard]] inline GLuint GetWidth() const { return width; }
+	[[nodiscard]] inline GLuint GetHeight() const { return height; }
 
 	inline void SetVSync(bool vsyncEnabled) const
 	{

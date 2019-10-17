@@ -7,11 +7,11 @@
 class Timer 
 {
 public:
-	typedef void(AEApplication::*TimerAction)();
+	typedef void(AEApplication::*TimerAction)()const;
 
 	Timer(const double rate) : sleepTime(GetSleepTime(rate)), previousTime(glfwGetTime()),
 							   tickTime(previousTime), currentTime(0),
-							   actionToPerform(nullptr),
+							   actionToPerform(nullptr), instance(nullptr),
 							   deltaTime(0), frames(0) 
 							   { }
    ~Timer() {}
@@ -38,8 +38,8 @@ public:
 		}
 	}
 
-	inline double GetDeltaTime() { return deltaTime; }
-	inline double GetCurrentTime() { return currentTime; }
+	[[nodiscard]] inline double GetDeltaTime() const { return deltaTime; }
+	[[nodiscard]] inline double GetCurrentTime() const { return currentTime; }
 	
 	inline void SetTimerAction(TimerAction action, AEApplication* instance) 
 	{ 
@@ -47,7 +47,7 @@ public:
 	}
 
 protected:
-	inline double GetSleepTime(const double fps) { return 1.0 / fps; }
+	static inline double GetSleepTime(const double fps) { return 1.0 / fps; }
 
 protected:
 	double currentTime;

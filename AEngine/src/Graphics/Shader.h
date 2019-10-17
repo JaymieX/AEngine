@@ -1,30 +1,24 @@
 #pragma once
 
-class Shader
+#include "Systems/EntityComponent.h"
+
+class Shader : public Component
 {
 public:
-	Shader(const char*, const char*);
+	Shader() = default;
+	Shader(const char*, const char*, const char*);
+	
    ~Shader();
-
-	Shader(const Shader&)	= delete;
-	Shader(Shader&&)		= delete;
-	Shader& operator		= (const Shader&) = delete;
-	Shader& operator		= (Shader&&) = delete;
-
-	inline GLuint getProgram() const { return shaderID; }
-	inline GLuint getUniformID(std::string name) { return uniforms[name]; }
-
+	
+	void Start() override;
+	void Render() override;
+	
 private:
-	char* ReadTextFile(const char*);
-	void CompileShaderProgram(const char*, const char*);
-	void LinkShaderProgram();
+	static GLuint CreateShader(const GLenum, const char*, const char*);
+	
+	const char* shaderName; 
+	const char* vertFilePath;
+	const char* fragFilePath; 
 
-	void SetUniformLocations();
-
-private:
-	std::unordered_map<std::string, GLuint> uniforms;
-
-	GLuint shaderID;
-	GLuint vertShaderID;
-	GLuint fragShaderID;
+	GLuint programId;
 };

@@ -10,13 +10,13 @@ public:
 	void operator=(AEApplication const&) = delete;
 
 	bool Initialize();
-	void Run();
+	void Run() const;
 
 private:
 	void BuildScene(const unsigned int = 0);
-	void Update();
-	void AudioUpdate();
-	void Render();
+	void Update() const;
+	void AudioUpdate() const;
+	void Render() const;
 
 private:
 	bool sceneActive = false;

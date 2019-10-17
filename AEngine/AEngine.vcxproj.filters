@@ -16,6 +16,9 @@
     <Filter Include="Window">
       <UniqueIdentifier>{3DEA79DA-298C-A4B0-1247-B804FE872B01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{b848ab8c-2c3e-41fb-9ffc-660b89c959cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\AEApplication.h">
@@ -51,6 +54,7 @@
     </ClInclude>
     <ClInclude Include="src\Core\Timer.h" />
     <ClInclude Include="src\Core\Logger.h" />
+    <ClInclude Include="src\Core\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\AEApplication.cpp">
@@ -82,5 +86,14 @@
       <Filter>Window</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Logger.cpp" />
+    <ClCompile Include="src\Core\Utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragCubeShader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="vertCubeShader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
