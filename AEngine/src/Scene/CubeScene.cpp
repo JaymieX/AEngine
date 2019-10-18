@@ -5,13 +5,17 @@
 #include "Graphics/Mesh.h"
 #include "Graphics/Shader.h"
 
+CubeScene::~CubeScene()
+{
+	
+}
+
+
 bool CubeScene::Initialize()
 {
 	sceneEntityManagerPtr = std::make_unique<EntityManager>();
 	
 	auto cube = sceneEntityManagerPtr->CreateAndAddEntity();
-
-	Vertex v;
 
 	auto vert = std::vector<Vertex*>{
 		new Vertex{vec3(-0.5f, -0.5f, 0.0f)},
@@ -19,8 +23,8 @@ bool CubeScene::Initialize()
 		new Vertex{vec3(0.0f, 0.5f, 0.0f)},
 	};
 
-	cube->addComponent<Mesh>(vert);
 	cube->addComponent<Shader>("cubeShader", "vertCubeShader.glsl", "fragCubeShader.glsl");
+	cube->addComponent<Mesh>(vert);
 	cube->addComponent<MeshRenderer>(GL_TRIANGLES);
 
 	return true;

@@ -15,8 +15,8 @@ Shader::~Shader()
 
 void Shader::Start()
 {
-	const auto vShaderCode = Utils::ReadTextFile(vertFilePath);
-	const auto fShaderCode = Utils::ReadTextFile(fragFilePath);
+	auto vShaderCode = Utils::ReadTextFile(vertFilePath);
+	auto fShaderCode = Utils::ReadTextFile(fragFilePath);
 
 	const auto vertShaderId = CreateShader(GL_VERTEX_SHADER, vShaderCode, shaderName);
 	const auto fragShaderId = CreateShader(GL_FRAGMENT_SHADER, fShaderCode, shaderName);
@@ -46,12 +46,14 @@ void Shader::Render()
 	glUseProgram(programId);
 }
 
-GLuint Shader::CreateShader(const GLenum shaderType, const char* shaderSource, const char* shaderName)
+GLuint Shader::CreateShader(const GLenum shaderType, std::string& shaderSource, const char* shaderName)
 {
 	auto compileResult = 0;
 	const auto shader = glCreateShader(shaderType);
+	
+	const auto shaderCode = shaderSource.c_str();
 
-	glShaderSource(shader, 1, &shaderSource, nullptr);
+	glShaderSource(shader, 1, &shaderCode, nullptr);
 	glCompileShader(shader);
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
 

@@ -3,5 +3,5 @@
 class Utils
 {
 public:
-	static const char* ReadTextFile(const char*);
+	static std::string ReadTextFile(const char*);
 };

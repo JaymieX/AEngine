@@ -14,7 +14,7 @@ public:
 	void Render() override;
 	
 private:
-	static GLuint CreateShader(const GLenum, const char*, const char*);
+	static GLuint CreateShader(const GLenum, std::string&, const char*);
 	
 	const char* shaderName; 
 	const char* vertFilePath;

@@ -2,9 +2,9 @@
 #include "Core/Logger.h"
 #include "Utils.h"
 
-const char* Utils::ReadTextFile(const char* path)
+std::string Utils::ReadTextFile(const char* path)
 {
-	const char* buffer = nullptr;
+	std::string shaderString;
 	std::ifstream file;
 	file.exceptions(std::ifstream::badbit | std::ifstream::failbit);
 
@@ -15,7 +15,7 @@ const char* Utils::ReadTextFile(const char* path)
 
 		stream << file.rdbuf();
 		file.close();
-		buffer = stream.str().c_str();
+		shaderString = stream.str();
 	}
 	catch (std::ifstream::failure ifStreamException)
 	{
@@ -23,5 +23,5 @@ const char* Utils::ReadTextFile(const char* path)
 		return "";
 	}
 
-	return buffer;
+	return shaderString;
 }

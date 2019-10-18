@@ -6,6 +6,7 @@ class CubeScene : public IScene
 {
 public: 
 	explicit CubeScene() = default;
+	~CubeScene();
 
 	virtual bool Initialize() override;
 	virtual void Update(const float dt) override;

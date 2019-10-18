@@ -24,6 +24,10 @@ bool AEApplication::Initialize()
 {
 	LOG_INIT();
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	
 	if (glfwInit() == GLFW_FALSE)
 	{
 		std::cout << "Failed to initialize GLFW" << std::endl;
@@ -46,6 +50,8 @@ bool AEApplication::Initialize()
 		return false;
 	}
 
+	LOG_INFO(std::string(reinterpret_cast<const char* const>(glGetString(GL_VERSION))), "", 0);
+
 	glViewport(0, 0, windowPtr->GetWidth(), windowPtr->GetHeight());
 
 	scenes.push_back(new CubeScene());
@@ -61,8 +67,6 @@ void AEApplication::Run() const
 	{
 		graphicsTimerPtr->Update();
 		//audioTimerPtr->Update();
-
-		Render();
 	}
 }
 
@@ -75,6 +79,8 @@ void AEApplication::Update() const
 
 	if (sceneActive)
 		scenePtr->Update(static_cast<float>(graphicsTimerPtr->GetDeltaTime()));
+
+	Render();
 }
 
 void AEApplication::AudioUpdate() const
