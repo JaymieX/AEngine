@@ -1,45 +1,263 @@
 #include <Core/AEpch.h>
-#include "Core/Logger.h"
 #include "CubeScene.h"
-#include "Systems/EntityComponent.h"
 #include "Graphics/Mesh.h"
 #include "Graphics/Shader.h"
-
-CubeScene::~CubeScene()
-{
-	
-}
-
+#include "Graphics/Camera.h"
+#include "Components/Transform.h"
 
 bool CubeScene::Initialize()
 {
 	sceneEntityManagerPtr = std::make_unique<EntityManager>();
 	
-	auto cube = sceneEntityManagerPtr->CreateAndAddEntity();
+	cubeEntityPtr = sceneEntityManagerPtr->CreateAndAddEntity();
+	cameraEntityPtr = sceneEntityManagerPtr->CreateAndAddEntity();
 
-	auto vert = std::vector<Vertex*>{
-		new Vertex{vec3(-0.5f, -0.5f, 0.0f)},
-		new Vertex{vec3(0.5f, -0.5f, 0.0f)},
-		new Vertex{vec3(0.0f, 0.5f, 0.0f)},
-	};
+	Vertex v{};
 
-	cube->addComponent<Shader>("cubeShader", "vertCubeShader.glsl", "fragCubeShader.glsl");
-	cube->addComponent<Mesh>(vert);
-	cube->addComponent<MeshRenderer>(GL_TRIANGLES);
+	std::vector<Vertex> vertList;
 
+	v.position = glm::vec3(-0.5f, -0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, -1.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.583f, 0.771f, 0.014f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, -0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, -1.0f);
+	v.uvCoords = glm::vec2(1.0f, 0.0f);
+	v.color = glm::vec3(0.609f, 0.115f, 0.436f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, 0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, -1.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.327f, 0.483f, 0.844f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, 0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, -1.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.822f, 0.569f, 0.201f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, 0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, -1.0f);
+	v.uvCoords = glm::vec2(0.0f, 1.0f);
+	v.color = glm::vec3(0.435f, 0.602f, 0.223f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, -0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, -1.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.310f, 0.747f, 0.185f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, -0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, 1.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.597f, 0.770f, 0.761f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, -0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, 1.0f);
+	v.uvCoords = glm::vec2(1.0f, 0.0f);
+	v.color = glm::vec3(0.559f, 0.436f, 0.730f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, 0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, 1.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.359f, 0.583f, 0.152f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, 0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, 1.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.483f, 0.596f, 0.789f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, 0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, 1.0f);
+	v.uvCoords = glm::vec2(0.0f, 1.0f);
+	v.color = glm::vec3(0.559f, 0.861f, 0.639f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, -0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, 0.0f, 1.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.195f, 0.548f, 0.859f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, 0.5f, 0.5f);
+	v.normal = glm::vec3(-1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.014f, 0.184f, 0.576f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, 0.5f, -0.5f);
+	v.normal = glm::vec3(-1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 0.0f);
+	v.color = glm::vec3(0.771f, 0.328f, 0.970f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, -0.5f, -0.5f);
+	v.normal = glm::vec3(-1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.406f, 0.615f, 0.116f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, -0.5f, -0.5f);
+	v.normal = glm::vec3(-1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.676f, 0.977f, 0.133f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, -0.5f, 0.5f);
+	v.normal = glm::vec3(-1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 1.0f);
+	v.color = glm::vec3(0.971f, 0.572f, 0.833f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, 0.5f, 0.5f);
+	v.normal = glm::vec3(-1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.140f, 0.616f, 0.489f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, 0.5f, 0.5f);
+	v.normal = glm::vec3(1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.997f, 0.513f, 0.064f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, 0.5f, -0.5f);
+	v.normal = glm::vec3(1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 0.0f);
+	v.color = glm::vec3(0.945f, 0.719f, 0.592f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, -0.5f, -0.5f);
+	v.normal = glm::vec3(1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.543f, 0.021f, 0.978f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, -0.5f, -0.5f);
+	v.normal = glm::vec3(1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.279f, 0.317f, 0.505f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, -0.5f, 0.5f);
+	v.normal = glm::vec3(1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 1.0f);
+	v.color = glm::vec3(0.167f, 0.620f, 0.077f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, 0.5f, 0.5f);
+	v.normal = glm::vec3(1.0f, 0.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.347f, 0.857f, 0.137f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, -0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, -1.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.055f, 0.953f, 0.042f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, -0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, -1.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 0.0f);
+	v.color = glm::vec3(0.714f, 0.505f, 0.345f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, -0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, -1.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.783f, 0.290f, 0.734f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, -0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, -1.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.722f, 0.645f, 0.174f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, -0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, -1.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 1.0f);
+	v.color = glm::vec3(0.302f, 0.455f, 0.848f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, -0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, -1.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.225f, 0.587f, 0.040f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, 0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, 1.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.517f, 0.713f, 0.338f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, 0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, 1.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 0.0f);
+	v.color = glm::vec3(0.053f, 0.959f, 0.120f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, 0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, 1.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.393f, 0.621f, 0.362f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(0.5f, 0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, 1.0f, 0.0f);
+	v.uvCoords = glm::vec2(1.0f, 1.0f);
+	v.color = glm::vec3(0.673f, 0.211f, 0.457f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, 0.5f, 0.5f);
+	v.normal = glm::vec3(0.0f, 1.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 1.0f);
+	v.color = glm::vec3(0.820f, 0.883f, 0.371f);
+	vertList.push_back(v);
+
+	v.position = glm::vec3(-0.5f, 0.5f, -0.5f);
+	v.normal = glm::vec3(0.0f, 1.0f, 0.0f);
+	v.uvCoords = glm::vec2(0.0f, 0.0f);
+	v.color = glm::vec3(0.982f, 0.099f, 0.879f);
+	vertList.push_back(v);
+
+	//Adding Components To Camera Object
+	cameraEntityPtr->AddComponent<Transform>();
+	cameraEntityPtr->AddComponent<Camera>(10.0f, glm::vec2(0.2f, 50.0f));
+	
+	//Adding Components To Cube Object
+	cubeEntityPtr->AddComponent<Transform>();
+	cubeEntityPtr->AddComponent<Shader>("cubeShader", "vertCubeShader.glsl", "fragCubeShader.glsl");
+	cubeEntityPtr->AddComponent<Mesh>(vertList);
+	cubeEntityPtr->AddComponent<MeshRenderer>(cameraEntityPtr, GL_TRIANGLES);
+
+	//cubeEntityPtr->GetComponent<Transform>().scale = glm::vec3(0.4f);
+	cameraEntityPtr->GetComponent<Transform>().position = glm::vec3(0.0f, 0.0f, -50.0f);
+	
 	return true;
 }
 
 void CubeScene::Update(const float dt)
 {
+	cubeEntityPtr->GetComponent<Transform>().angle += 1.0f;
+	
 	sceneEntityManagerPtr->Update();
 	sceneEntityManagerPtr->SeekAndDestroy();
 }
 
 void CubeScene::Render() const
 {
-	//glPolygonMode(GL_FRONT, GL_POINTS);
-	
 	sceneEntityManagerPtr->Render();
 }
 

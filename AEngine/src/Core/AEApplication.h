@@ -3,29 +3,32 @@
 class AEApplication
 {
 public:
-	AEApplication();
-	~AEApplication();
-
-	AEApplication(AEApplication&) = delete;
-	void operator=(AEApplication const&) = delete;
+	AEApplication(const AEApplication&) = delete;
+	AEApplication(AEApplication&&) = delete;
+	AEApplication& operator=(const AEApplication&) = delete;
+	AEApplication& operator=(AEApplication&&) = delete;
 
 	bool Initialize();
 	void Run() const;
 
-private:
-	void BuildScene(const unsigned int = 0);
-	void Update() const;
-	void AudioUpdate() const;
-	void Render() const;
+	static AEApplication* GetInstance();
+
+	[[nodiscard]] glm::vec2 GetWindowSize() const;
 
 private:
+	AEApplication() = default;
+   ~AEApplication();
+	
+	void BuildScene(class IScene*);
+	void Update() const;
+	void Render() const;
+	
 	bool sceneActive = false;
 
-	std::vector<class IScene*> scenes;
-
 	std::unique_ptr<class IScene> scenePtr;
-	std::unique_ptr<class Timer> graphicsTimerPtr;
-	std::unique_ptr<class Timer> audioTimerPtr;
 	std::unique_ptr<class Window> windowPtr;
-	std::unique_ptr<class EntityManager> entityManager;
+	std::unique_ptr<class Timer> graphicsTimerPtr;
+
+	static std::unique_ptr<AEApplication> instance;
+	friend std::default_delete<AEApplication>;
 };

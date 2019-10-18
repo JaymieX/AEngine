@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Systems/EntityComponent.h"
+
 class IScene 
 {
 public:
@@ -11,5 +13,5 @@ public:
 	virtual void Render() const = 0;
 
 protected:
-	std::unique_ptr<class EntityManager> sceneEntityManagerPtr;
+	std::unique_ptr<EntityManager> sceneEntityManagerPtr;
 };

@@ -58,6 +58,8 @@
     <ClInclude Include="src\Window\Window.h">
       <Filter>Window</Filter>
     </ClInclude>
+    <ClInclude Include="src\Components\Transform.h" />
+    <ClInclude Include="src\Graphics\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\AEApplication.cpp">
@@ -94,5 +96,6 @@
     <ClCompile Include="src\Window\Window.cpp">
       <Filter>Window</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\Camera.cpp" />
   </ItemGroup>
 </Project>

@@ -95,12 +95,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\Transform.h" />
     <ClInclude Include="src\Core\AEApplication.h" />
     <ClInclude Include="src\Core\AEpch.h" />
     <ClInclude Include="src\Core\Logger.h" />
     <ClInclude Include="src\Core\Timer.h" />
     <ClInclude Include="src\Core\Utils.h" />
     <ClInclude Include="src\GameObject.h" />
+    <ClInclude Include="src\Graphics\Camera.h" />
     <ClInclude Include="src\Graphics\Mesh.h" />
     <ClInclude Include="src\Graphics\Model.h" />
     <ClInclude Include="src\Graphics\ObjLoader.h" />
@@ -119,6 +121,7 @@
     <ClCompile Include="src\Core\Utils.cpp" />
     <ClCompile Include="src\Core\main.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\Graphics\Camera.cpp" />
     <ClCompile Include="src\Graphics\Mesh.cpp" />
     <ClCompile Include="src\Graphics\Model.cpp" />
     <ClCompile Include="src\Graphics\ObjLoader.cpp" />

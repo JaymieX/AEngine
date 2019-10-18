@@ -14,6 +14,10 @@ bool Window::Create(std::string name, std::pair<GLuint, GLuint> dimensions)
 	this->width = dimensions.first;
 	this->height = dimensions.second;
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	this->window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
 
 	if (!window)
@@ -21,9 +25,10 @@ bool Window::Create(std::string name, std::pair<GLuint, GLuint> dimensions)
 		std::cout << "Failed to create Window" << std::endl;
 		return false;
 	}
-
+	
 	glfwMakeContextCurrent(window);
-	SetVSync(false);
+	glfwSetWindowUserPointer(window, this);
+	SetVSync(true);
 
 	return true;
 }

@@ -27,14 +27,14 @@ using ComponentArray = std::array<Component*, maxComponents>;
 class Component
 {
 public:
-	Component() : owner(nullptr) { }
+	Component() : boundEntity(nullptr) { }
 	virtual ~Component() = default;
 
 	virtual void Start() {};
 	virtual void Update() {};
 	virtual void Render() {};
 
-	Entity* owner;
+	Entity* boundEntity;
 };
 
 class Entity
@@ -70,10 +70,10 @@ public:
 	}
 
 	template <typename T, typename ...TArgs>
-	Component& addComponent(TArgs&& ... componentArgs)
+	T& AddComponent(TArgs&& ... componentArgs)
 	{
 		std::unique_ptr<T> newComponentPtr = std::make_unique<T>(std::forward<TArgs>(componentArgs)...);
-		newComponentPtr->owner = this;
+		newComponentPtr->boundEntity = this;
 
 		components.emplace_back(std::move(newComponentPtr));
 
@@ -83,10 +83,10 @@ public:
 		componentBitset[getComponentTypeID<T>()] = true;
 
 		c->Start();
-		return *c;
+		return *static_cast<T*>(c);
 	}
 
-	template<typename T> T& getComponent() const
+	template<typename T> T& GetComponent() const
 	{
 		auto componentPtr(componentArray[getComponentTypeID<T>()]);
 		return *static_cast<T*>(componentPtr);

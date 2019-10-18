@@ -5,10 +5,11 @@
 class CubeScene : public IScene
 {
 public: 
-	explicit CubeScene() = default;
-	~CubeScene();
-
 	virtual bool Initialize() override;
 	virtual void Update(const float dt) override;
 	virtual void Render() const override;
+
+private:
+	Entity* cubeEntityPtr = nullptr;
+	Entity* cameraEntityPtr = nullptr;
 };

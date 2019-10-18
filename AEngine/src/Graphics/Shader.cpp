@@ -41,11 +41,6 @@ void Shader::Start()
 	glDeleteShader(fragShaderId);
 }
 
-void Shader::Render()
-{
-	glUseProgram(programId);
-}
-
 GLuint Shader::CreateShader(const GLenum shaderType, std::string& shaderSource, const char* shaderName)
 {
 	auto compileResult = 0;

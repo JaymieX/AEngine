@@ -17,8 +17,7 @@ public:
 	Logger& operator=(const Logger&) = delete;
 	Logger& operator=(Logger&&) = delete;
 	Logger() = delete;
-
-	static void Initialize();
+	
 	static void Log(const MessageSeverity, const std::string&, const std::string&, const int);
 
 private:	
@@ -26,7 +25,6 @@ private:
 	static std::string msg;
 };
 
-#define LOG_INIT() { Logger::Initialize(); }
 #define LOG_INFO(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::INFO, msg, fileName, line); }
 #define LOG_TRACE(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::TRACE, msg, fileName, line); }
 #define LOG_ERROR(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::ERROR, msg, fileName, line); }

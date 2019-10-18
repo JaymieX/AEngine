@@ -4,13 +4,6 @@
 Logger::MessageSeverity Logger::type = Logger::MessageSeverity::NONE;
 std::string Logger::msg;
 
-void Logger::Initialize()
-{
-	std::ofstream out;
-	out.open("AEngineLog.txt", std::ios::out);
-	out.close();
-}
-
 void Logger::Log(const Logger::MessageSeverity severity, const std::string& message, const std::string& fileName, const int line)
 {
 	type = severity;

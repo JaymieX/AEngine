@@ -2,47 +2,37 @@
 #include "AEApplication.h"
 #include "Window/Window.h"
 #include "Core/Timer.h"
-#include "Systems/EntityComponent.h"
-#include "Core/Logger.h"
 #include "Scene/IScene.h"
 #include "Scene/CubeScene.h"
 
-AEApplication::AEApplication()
-{ 
+std::unique_ptr<AEApplication> AEApplication::instance(nullptr);
 
+AEApplication* AEApplication::GetInstance()
+{
+	if (!instance) instance = std::unique_ptr<AEApplication>(new AEApplication());
+	return instance.get();
 }
 
 AEApplication::~AEApplication() 
 {  
-	scenePtr.reset();
-	entityManager.reset();
-	windowPtr.reset();
 	glfwTerminate();
 }
 
-bool AEApplication::Initialize() 
+glm::vec2 AEApplication::GetWindowSize() const
 {
-	LOG_INIT();
+	return glm::vec2(windowPtr->GetWidth(), windowPtr->GetHeight());
+}
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	
+bool AEApplication::Initialize() 
+{	
 	if (glfwInit() == GLFW_FALSE)
 	{
 		std::cout << "Failed to initialize GLFW" << std::endl;
 		return false;
 	}
 
-	entityManager = std::make_unique<EntityManager>();
 	windowPtr = std::make_unique<Window>();
 	windowPtr->Create("AEngine", std::make_pair(800, 600));
-
-	graphicsTimerPtr = std::make_unique<Timer>(90.0);
-	graphicsTimerPtr->SetTimerAction(&AEApplication::Update, this);
-
-	//audioTimerPtr = std::make_unique<Timer>(256.0);
-	//audioTimerPtr->SetTimerAction(&AEApplication::AudioUpdate, this);
 
 	if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
@@ -50,13 +40,13 @@ bool AEApplication::Initialize()
 		return false;
 	}
 
-	LOG_INFO(std::string(reinterpret_cast<const char* const>(glGetString(GL_VERSION))), "", 0);
-
+	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, windowPtr->GetWidth(), windowPtr->GetHeight());
 
-	scenes.push_back(new CubeScene());
+	BuildScene(new CubeScene());
 
-	BuildScene();
+	graphicsTimerPtr = std::make_unique<Timer>(90.0);
+	graphicsTimerPtr->SetTimerAction(&AEApplication::Update, this);
 
 	return true;
 }
@@ -66,41 +56,30 @@ void AEApplication::Run() const
 	while (!glfwWindowShouldClose(windowPtr->GetWindow()))
 	{
 		graphicsTimerPtr->Update();
-		//audioTimerPtr->Update();
+		Render();
 	}
 }
 
 void AEApplication::Update() const
 {
 	glfwPollEvents();
-	glfwSwapBuffers(windowPtr->GetWindow());
-	entityManager->Update();
-	entityManager->SeekAndDestroy();
 
 	if (sceneActive)
 		scenePtr->Update(static_cast<float>(graphicsTimerPtr->GetDeltaTime()));
-
-	Render();
-}
-
-void AEApplication::AudioUpdate() const
-{
-	//LOG_INFO("Audio Updating...", __FILE__, __LINE__);
 }
 
 void AEApplication::Render() const
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	
-	entityManager->Render();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	if (sceneActive)
-		scenePtr->Render();
+	if (sceneActive) scenePtr->Render();
+
+	glfwSwapBuffers(windowPtr->GetWindow());
 }
 
-void AEApplication::BuildScene(const unsigned int buildIndex)
+void AEApplication::BuildScene(IScene* buildScene)
 {
-	scenePtr.reset(scenes[buildIndex]);
+	scenePtr.reset(buildScene);
 	sceneActive = scenePtr->Initialize();
 }

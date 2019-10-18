@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Systems/EntityComponent.h"
+#include "Graphics/Camera.h"
 
 using namespace glm;
 
@@ -15,11 +16,11 @@ struct Mesh final : public Component
 {
 public:
 	Mesh() = default;
-	Mesh(std::vector<Vertex*>&);
+	Mesh(std::vector<Vertex>&);
 	
    ~Mesh();
 
-	std::vector<Vertex*> verticies;
+	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
 };
 
@@ -27,7 +28,7 @@ class MeshRenderer final : public Component
 {
 public:
 	MeshRenderer() = default;
-	MeshRenderer(GLenum);
+	explicit MeshRenderer(Entity*, GLenum);
 	
    ~MeshRenderer() override;
 
@@ -38,7 +39,9 @@ public:
 
 private:
 	GLuint vao, vbo;
+	GLuint modelLocId, viewLocId, projLocId, textureLocId;
 	Mesh mesh;
+	Camera camera;
 
 	void GenBuffers();
 };

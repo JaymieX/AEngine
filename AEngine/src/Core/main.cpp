@@ -3,12 +3,8 @@
 
 int main() {
 
-	auto application = new AEApplication();
-
-	if (application->Initialize())
-		application->Run();
-
-	delete application, application = nullptr;
+	if (AEApplication::GetInstance()->Initialize())
+		AEApplication::GetInstance()->Run();
 
 	return 0;
 }
