@@ -10,6 +10,7 @@ public:
 
 	bool Initialize();
 	void Run() const;
+	void ResizeUpdate() const;
 
 	static AEApplication* GetInstance();
 

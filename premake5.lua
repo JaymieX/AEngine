@@ -39,6 +39,7 @@ project "AEngine"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/external/glm/glm",
+		"%{prj.name}/external/stb",
 		path.join(GLAD_DIR, "include"),
 		path.join(GLFW_DIR, "include"),
 	}

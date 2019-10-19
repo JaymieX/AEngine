@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Components">
+      <UniqueIdentifier>{6B7DD516-5735-1764-C03C-F0BFAC13B254}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
@@ -18,6 +21,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\Transform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\AEApplication.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -34,6 +40,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\GameObject.h" />
+    <ClInclude Include="src\Graphics\Camera.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\Mesh.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -58,8 +67,6 @@
     <ClInclude Include="src\Window\Window.h">
       <Filter>Window</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Transform.h" />
-    <ClInclude Include="src\Graphics\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\AEApplication.cpp">
@@ -78,6 +85,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\Graphics\Camera.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="src\Graphics\Mesh.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -96,6 +106,5 @@
     <ClCompile Include="src\Window\Window.cpp">
       <Filter>Window</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\Camera.cpp" />
   </ItemGroup>
 </Project>

@@ -11,10 +11,11 @@ public:
 	
 	void Start() override;
 	void Update() override;
+	void ResizeUpdate() override;
 	
 	[[nodiscard]] inline glm::mat4 GetViewMatrix() const
 	{
-		return glm::translate(glm::mat4(1.0f), transform.position);
+		return glm::lookAt(transformPtr->position, glm::normalize(transformPtr->position - glm::vec3(0.0f)), up);
 	}
 
 	[[nodiscard]] inline glm::mat4 GetPerspectiveMatrix() const { return perspective; }
@@ -24,12 +25,11 @@ public:
 private:
 	void UpdateCameraOrientation();
 
-	Transform transform;
+	Transform* transformPtr;
 	
 	float fov = 0;
 	glm::mat4 perspective, orthographic;
 	glm::vec2 clipPlanes;
 	glm::vec3 forward, up, right;
 	glm::vec3 worldUp;
-	
 };

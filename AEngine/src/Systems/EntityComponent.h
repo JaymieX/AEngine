@@ -30,9 +30,10 @@ public:
 	Component() : boundEntity(nullptr) { }
 	virtual ~Component() = default;
 
-	virtual void Start() {};
-	virtual void Update() {};
-	virtual void Render() {};
+	virtual void Start() {}
+	virtual void Update() {}
+	virtual void Render() {}
+	virtual void ResizeUpdate() {}
 
 	Entity* boundEntity;
 };
@@ -59,6 +60,11 @@ public:
 		for (auto& c : components) c->Render();
 	}
 
+	void ResizeUpdate()
+	{
+		for (auto& c : components) c->ResizeUpdate();
+	}
+
 	void Destroy() { active = false; }
 
 	[[nodiscard]] bool isActive() const { return active; }
@@ -70,7 +76,7 @@ public:
 	}
 
 	template <typename T, typename ...TArgs>
-	T& AddComponent(TArgs&& ... componentArgs)
+	T* AddComponent(TArgs&& ... componentArgs)
 	{
 		std::unique_ptr<T> newComponentPtr = std::make_unique<T>(std::forward<TArgs>(componentArgs)...);
 		newComponentPtr->boundEntity = this;
@@ -83,13 +89,13 @@ public:
 		componentBitset[getComponentTypeID<T>()] = true;
 
 		c->Start();
-		return *static_cast<T*>(c);
+		return static_cast<T*>(c);
 	}
 
-	template<typename T> T& GetComponent() const
+	template<typename T> T* GetComponent() const
 	{
 		auto componentPtr(componentArray[getComponentTypeID<T>()]);
-		return *static_cast<T*>(componentPtr);
+		return static_cast<T*>(componentPtr);
 	}
 
 private:
@@ -118,6 +124,11 @@ public:
 	void Render()
 	{
 		for (auto& entity : entities) entity->Render();
+	}
+
+	void ResizeUpdate()
+	{
+		for (auto& entity : entities) entity->ResizeUpdate();
 	}
 
 	void SeekAndDestroy()

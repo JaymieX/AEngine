@@ -1,5 +1,7 @@
 #include <Core/AEpch.h>
 #include "Window.h"
+#include "Core/Logger.h"
+#include "Core/AEApplication.h"
 
 Window::Window() : window(nullptr), width(0), height(0) { }
 
@@ -22,9 +24,18 @@ bool Window::Create(std::string name, std::pair<GLuint, GLuint> dimensions)
 
 	if (!window)
 	{
-		std::cout << "Failed to create Window" << std::endl;
+		LOG_ERROR("Failed to create Window", __FILE__, __LINE__);
 		return false;
 	}
+
+	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* glfwWindow, int width, int height) {
+		auto window = static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+
+		window->SetDimensions(std::make_pair(width, height));
+		glViewport(0, 0, width, height);
+
+		AEApplication::GetInstance()->ResizeUpdate();
+	});
 	
 	glfwMakeContextCurrent(window);
 	glfwSetWindowUserPointer(window, this);

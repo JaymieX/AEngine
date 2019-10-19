@@ -11,7 +11,7 @@ Mesh::~Mesh()
 }
 
 MeshRenderer::MeshRenderer(Entity* camera, const GLenum drawMode) : drawMode(drawMode), vao(0), vbo(0), modelLocId(0), viewLocId(0),
-																	projLocId(0), textureLocId(0), camera(camera->GetComponent<Camera>())
+																	projLocId(0), textureLocId(0), cameraPtr(camera->GetComponent<Camera>()), meshPtr(nullptr)
 																	{}
 
 MeshRenderer::~MeshRenderer()
@@ -22,20 +22,20 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Start()
 {
-	mesh = boundEntity->GetComponent<Mesh>();
+	meshPtr = boundEntity->GetComponent<Mesh>();
 	GenBuffers();
 }
 
 void MeshRenderer::Render()
 {
-	boundEntity->GetComponent<Shader>().UseProgram();
+	boundEntity->GetComponent<Shader>()->UseProgram();
 
-	glUniformMatrix4fv(viewLocId, 1, GL_FALSE, glm::value_ptr(camera.GetViewMatrix()));
-	glUniformMatrix4fv(projLocId, 1, GL_FALSE, glm::value_ptr(camera.GetPerspectiveMatrix()));
+	glUniformMatrix4fv(viewLocId, 1, GL_FALSE, glm::value_ptr(cameraPtr->GetViewMatrix()));
+	glUniformMatrix4fv(projLocId, 1, GL_FALSE, glm::value_ptr(cameraPtr->GetPerspectiveMatrix()));
 	
 	glBindVertexArray(vao);
-	glUniformMatrix4fv(modelLocId, 1, GL_FALSE, glm::value_ptr(boundEntity->GetComponent<Transform>().GetTransformMatrix()));
-	glDrawArrays(drawMode, 0, static_cast<GLsizei>(mesh.vertices.size()));
+	glUniformMatrix4fv(modelLocId, 1, GL_FALSE, glm::value_ptr(boundEntity->GetComponent<Transform>()->GetTransformMatrix()));
+	glDrawArrays(drawMode, 0, static_cast<GLsizei>(meshPtr->vertices.size()));
 
 	glBindVertexArray(0);
 }
@@ -55,7 +55,7 @@ void MeshRenderer::GenBuffers()
 	//Create & Bind Vertex Buffer Object
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex), &mesh.vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, meshPtr->vertices.size() * sizeof(Vertex), &meshPtr->vertices[0], GL_STATIC_DRAW);
 
 	// Position Attribute
 	glVertexAttribPointer(positionId, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), static_cast<GLvoid*>(nullptr));
@@ -78,7 +78,7 @@ void MeshRenderer::GenBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//Get ShaderProgramID
-	const auto shaderProgramId = boundEntity->GetComponent<Shader>().GetShaderProgram();
+	const auto shaderProgramId = boundEntity->GetComponent<Shader>()->GetShaderProgram();
 	
 	modelLocId = glGetUniformLocation(shaderProgramId, "model");
 	projLocId = glGetUniformLocation(shaderProgramId, "projection");

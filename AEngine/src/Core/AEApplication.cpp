@@ -83,3 +83,8 @@ void AEApplication::BuildScene(IScene* buildScene)
 	scenePtr.reset(buildScene);
 	sceneActive = scenePtr->Initialize();
 }
+
+void AEApplication::ResizeUpdate() const
+{
+	if (sceneActive) scenePtr->ResizeUpdate();
+}

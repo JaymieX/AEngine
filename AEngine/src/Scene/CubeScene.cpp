@@ -234,7 +234,7 @@ bool CubeScene::Initialize()
 
 	//Adding Components To Camera Object
 	cameraEntityPtr->AddComponent<Transform>();
-	cameraEntityPtr->AddComponent<Camera>(10.0f, glm::vec2(0.2f, 50.0f));
+	cameraEntityPtr->AddComponent<Camera>(45.0f, glm::vec2(0.2f, 50.0f));
 	
 	//Adding Components To Cube Object
 	cubeEntityPtr->AddComponent<Transform>();
@@ -242,15 +242,14 @@ bool CubeScene::Initialize()
 	cubeEntityPtr->AddComponent<Mesh>(vertList);
 	cubeEntityPtr->AddComponent<MeshRenderer>(cameraEntityPtr, GL_TRIANGLES);
 
-	//cubeEntityPtr->GetComponent<Transform>().scale = glm::vec3(0.4f);
-	cameraEntityPtr->GetComponent<Transform>().position = glm::vec3(0.0f, 0.0f, -50.0f);
+	cameraEntityPtr->GetComponent<Transform>()->position = glm::vec3(0.0f, 0.0f, -5.0f);
 	
 	return true;
 }
 
 void CubeScene::Update(const float dt)
 {
-	cubeEntityPtr->GetComponent<Transform>().angle += 1.0f;
+	cubeEntityPtr->GetComponent<Transform>()->angle += 1.0f;
 	
 	sceneEntityManagerPtr->Update();
 	sceneEntityManagerPtr->SeekAndDestroy();
@@ -259,5 +258,10 @@ void CubeScene::Update(const float dt)
 void CubeScene::Render() const
 {
 	sceneEntityManagerPtr->Render();
+}
+
+void CubeScene::ResizeUpdate() const
+{
+	sceneEntityManagerPtr->ResizeUpdate();
 }
 

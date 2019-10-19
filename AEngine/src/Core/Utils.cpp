@@ -25,3 +25,42 @@ std::string Utils::ReadTextFile(const char* path)
 
 	return shaderString;
 }
+
+Utils::LoadOBJModel::~LoadOBJModel()
+{
+}
+
+void Utils::LoadOBJModel::LoadModel(const std::string& fileName)
+{
+}
+
+void Utils::LoadOBJModel::LoadModel(const std::string& fileName, const std::string& matName)
+{
+}
+
+std::vector<Vertex> Utils::LoadOBJModel::GetVerts()
+{
+	return std::vector<Vertex>();
+}
+
+std::vector<int> Utils::LoadOBJModel::GetIndices()
+{
+	return std::vector<int>();
+}
+
+std::vector<Mesh> Utils::LoadOBJModel::GetSubmeshes()
+{
+	return std::vector<Mesh>();
+}
+
+void Utils::LoadOBJModel::PostProcessing()
+{
+}
+
+void Utils::LoadOBJModel::LoadMaterial(const std::string& fileName)
+{
+}
+
+void Utils::LoadOBJModel::LoadMaterialLibrary(const std::string& matName)
+{
+}

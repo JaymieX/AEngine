@@ -21,6 +21,11 @@ public:
 	[[nodiscard]] inline GLuint GetWidth() const { return width; }
 	[[nodiscard]] inline GLuint GetHeight() const { return height; }
 
+	[[nodiscard]] inline void SetDimensions(std::pair<GLuint, GLuint> dimensions)
+	{
+		width = dimensions.first; height = dimensions.second;
+	}
+
 	inline void SetVSync(bool vsyncEnabled) const
 	{
 		if (vsyncEnabled) glfwSwapInterval(1); else glfwSwapInterval(0);

@@ -11,7 +11,7 @@ Camera::Camera(const float fov, const glm::vec2 clipPlanes) : fov(fov), perspect
 
 void Camera::Start()
 {
-	transform = boundEntity->GetComponent<Transform>();
+	transformPtr = boundEntity->GetComponent<Transform>();
 
 	perspective = glm::perspective(fov, AEApplication::GetInstance()->GetWindowSize().x / AEApplication::GetInstance()->GetWindowSize().y, 
 			 clipPlanes.x, clipPlanes.y);
@@ -27,11 +27,22 @@ void Camera::Update()
 	UpdateCameraOrientation();
 }
 
+void Camera::ResizeUpdate()
+{
+	perspective = glm::perspective(fov, AEApplication::GetInstance()->GetWindowSize().x / AEApplication::GetInstance()->GetWindowSize().y,
+		clipPlanes.x, clipPlanes.y);
+
+	orthographic = glm::ortho(0.0f, AEApplication::GetInstance()->GetWindowSize().x, 0.0f,
+		AEApplication::GetInstance()->GetWindowSize().y, -1.0f, 1.0f);
+
+	UpdateCameraOrientation();
+}
+
 void Camera::UpdateCameraOrientation()
 {
-	forward.x = cos(glm::radians(transform.rotationAxis.x)) * cos(glm::radians(transform.rotationAxis.y));
-	forward.y = sin(glm::radians(transform.rotationAxis.y));
-	forward.z = sin(glm::radians(transform.rotationAxis.x)) * cos(glm::radians(transform.rotationAxis.y));
+	forward.x = cos(glm::radians(transformPtr->rotationAxis.x)) * cos(glm::radians(transformPtr->rotationAxis.y));
+	forward.y = sin(glm::radians(transformPtr->rotationAxis.y));
+	forward.z = sin(glm::radians(transformPtr->rotationAxis.x)) * cos(glm::radians(transformPtr->rotationAxis.y));
 	forward = glm::normalize(forward);
 
 	right = glm::normalize(glm::cross(forward, worldUp));

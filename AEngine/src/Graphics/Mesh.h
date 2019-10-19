@@ -40,8 +40,8 @@ public:
 private:
 	GLuint vao, vbo;
 	GLuint modelLocId, viewLocId, projLocId, textureLocId;
-	Mesh mesh;
-	Camera camera;
+	Mesh* meshPtr;
+	Camera* cameraPtr;
 
 	void GenBuffers();
 };
