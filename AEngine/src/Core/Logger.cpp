@@ -1,7 +1,7 @@
 #include <Core/AEpch.h>
 #include "Logger.h"
 
-Logger::MessageSeverity Logger::type = Logger::MessageSeverity::NONE;
+Logger::MessageSeverity Logger::type = Logger::MessageSeverity::RAD_NONE;
 std::string Logger::msg;
 
 void Logger::Log(const Logger::MessageSeverity severity, const std::string& message, const std::string& fileName, const int line)
@@ -9,21 +9,21 @@ void Logger::Log(const Logger::MessageSeverity severity, const std::string& mess
 	type = severity;
 	std::ofstream file;
 	file.open("AEngineLog.txt", std::ios::app | std::ios::out);
-	if (type <= type && type > Logger::MessageSeverity::NONE) {
+	if (type <= type && type > Logger::MessageSeverity::RAD_NONE) {
 
 		msg += "[";
 
 		switch (type)
 		{
-		case Logger::MessageSeverity::INFO: msg += "Info"; 
+		case Logger::MessageSeverity::RAD_INFO: msg += "Info"; 
 			break;
-		case Logger::MessageSeverity::TRACE: msg += "Trace";
+		case Logger::MessageSeverity::RAD_TRACE: msg += "Trace";
 			break;
-		case Logger::MessageSeverity::ERROR: msg += "Error";
+		case Logger::MessageSeverity::RAD_ERROR: msg += "Error";
 			break;
-		case Logger::MessageSeverity::WARNING: msg += "Warning";
+		case Logger::MessageSeverity::RAD_WARNING: msg += "Warning";
 			break;
-		case Logger::MessageSeverity::FATAL_ERROR: msg += "Fatal Error";
+		case Logger::MessageSeverity::RAD_FATAL_ERROR: msg += "Fatal Error";
 			break;
 		default: msg += "Info";
 		}

@@ -4,12 +4,12 @@ class Logger
 {
 public:
 	enum class MessageSeverity : unsigned short {
-		NONE,
-		INFO,
-		TRACE,
-		ERROR,
-		WARNING,
-		FATAL_ERROR,
+		RAD_NONE,
+		RAD_INFO,
+		RAD_TRACE,
+		RAD_ERROR,
+		RAD_WARNING,
+		RAD_FATAL_ERROR,
 	};
 
 	Logger(const Logger&) = delete;
@@ -25,8 +25,8 @@ private:
 	static std::string msg;
 };
 
-#define LOG_INFO(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::INFO, msg, fileName, line); }
-#define LOG_TRACE(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::TRACE, msg, fileName, line); }
-#define LOG_ERROR(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::ERROR, msg, fileName, line); }
-#define LOG_WARNING(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::WARNING, msg, fileName, line); }
-#define LOG_FATAL_ERROR(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::FATAL_ERROR, msg, fileName, line); }
+#define LOG_INFO(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::RAD_INFO, msg, fileName, line); }
+#define LOG_TRACE(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::RAD_TRACE, msg, fileName, line); }
+#define LOG_ERROR(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::RAD_ERROR, msg, fileName, line); }
+#define LOG_WARNING(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::RAD_WARNING, msg, fileName, line); }
+#define LOG_FATAL_ERROR(msg, fileName, line) { Logger::Log(Logger::MessageSeverity::RAD_FATAL_ERROR, msg, fileName, line); }

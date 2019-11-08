@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Windows.h>
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -24,5 +26,12 @@
 #include <gtc/type_ptr.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+
+#define XR_USE_PLATFORM_WIN32
+#define XR_USE_GRAPHICS_API_OPENGL
+#include <openxr/openxr.h>
+#include <openxr/openxr_platform.h>
 

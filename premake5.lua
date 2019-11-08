@@ -40,6 +40,7 @@ project "AEngine"
 		"%{prj.name}/src",
 		"%{prj.name}/external/glm/glm",
 		"%{prj.name}/external/stb",
+		"%{prj.name}/external/openxr/include",
 		path.join(GLAD_DIR, "include"),
 		path.join(GLFW_DIR, "include"),
 	}
@@ -48,11 +49,11 @@ project "AEngine"
 	{
 		"glad",
 		"glfw",
-		"opengl32.lib"
+		"opengl32.lib",
+		"openxr_loader"
 	}
 
 	filter "system:windows"
-		staticruntime "On"
 		systemversion "latest"
 
 		links { "gdi32", "kernel32", "psapi" }
@@ -62,10 +63,14 @@ project "AEngine"
 		optimize "Debug"
 		runtime "Debug"
 
+		libdirs { "%{prj.name}/external/openxr/Debug" }
+
 	filter "configurations:Release"
 		symbols "Off"
 		optimize "Full"
 		runtime "Release"
+
+		libdirs { "%{prj.name}/external/openxr/Release" }
 
 project "glad"
 	kind "StaticLib"
