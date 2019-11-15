@@ -97,6 +97,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Scene\ModelScene.h" />
     <ClInclude Include="src\Components\Transform.h" />
     <ClInclude Include="src\Core\AEApplication.h" />
     <ClInclude Include="src\Core\AEpch.h" />
@@ -105,6 +106,7 @@
     <ClInclude Include="src\Core\Utils.h" />
     <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Graphics\Camera.h" />
+    <ClInclude Include="src\Graphics\Light.h" />
     <ClInclude Include="src\Graphics\Mesh.h" />
     <ClInclude Include="src\Graphics\Model.h" />
     <ClInclude Include="src\Graphics\ObjLoader.h" />
@@ -116,6 +118,7 @@
     <ClInclude Include="src\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Scene\ModelScene.cpp" />
     <ClCompile Include="src\Core\AEApplication.cpp" />
     <ClCompile Include="src\Core\AEpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

@@ -55,6 +55,9 @@
     <ClInclude Include="src\Graphics\Shader.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\TextureHandler.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\CubeScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -67,7 +70,12 @@
     <ClInclude Include="src\Window\Window.h">
       <Filter>Window</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\TextureHandler.h" />
+    <ClInclude Include="src\Scene\ModelScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Light.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\AEApplication.cpp">
@@ -101,12 +109,17 @@
     <ClCompile Include="src\Graphics\Shader.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\TextureHandler.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\CubeScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Window\Window.cpp">
       <Filter>Window</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\TextureHandler.cpp" />
+    <ClCompile Include="src\Scene\ModelScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

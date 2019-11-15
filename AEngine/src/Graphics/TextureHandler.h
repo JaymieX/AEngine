@@ -32,7 +32,7 @@ public:
 		return textures.find(textureName)->second;
 	}
 
-	void CreateTexture(const std::string&, const std::string&);
+	void CreateTexture(const std::string& textureName, const std::string& path);
 
 private:
 	TextureHandler() = default;

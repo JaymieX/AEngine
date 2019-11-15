@@ -27,9 +27,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 #define XR_USE_PLATFORM_WIN32
 #define XR_USE_GRAPHICS_API_OPENGL
 #include <openxr/openxr.h>

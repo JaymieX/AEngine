@@ -25,5 +25,4 @@ void GameObject::Render() const
 	mat3 normalMatrix = transformMatrix;
 	glUniformMatrix4fv(transformMatrixID, 1, GL_FALSE, &transformMatrix[0][0]);
 	glUniformMatrix3fv(normalMatrixID, 1, GL_FALSE, &normalMatrix[0][0]);
-	if(model) model->Render();
 }

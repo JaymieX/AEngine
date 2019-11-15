@@ -16,7 +16,8 @@ struct Mesh final : public Component
 {
 public:
 	Mesh() = default;
-	Mesh(std::vector<Vertex>&);
+	explicit Mesh(Mesh&& mesh) noexcept;
+	explicit Mesh(std::vector<Vertex>&);
 	
    ~Mesh();
 
@@ -29,6 +30,8 @@ class MeshRenderer final : public Component
 public:
 	MeshRenderer() = default;
 	explicit MeshRenderer(Entity*, GLenum);
+	explicit MeshRenderer(Entity*, GLenum, GLuint);
+	explicit MeshRenderer(MeshRenderer&& renderer) noexcept;
 	
    ~MeshRenderer() override;
 
@@ -38,8 +41,18 @@ public:
 	GLenum drawMode;
 
 private:
-	GLuint vao, vbo;
-	GLuint modelLocId, viewLocId, projLocId, textureLocId;
+	GLuint vao = 0;
+	GLuint vbo = 0;
+	GLuint modelLocId = 0;
+	GLuint viewLocId = 0;
+	GLuint projLocId = 0;
+	GLuint textureLocId = 0;
+	GLuint cameraPosLocId = 0;
+	GLuint lightPosLocId = 0;
+	GLuint ambientLocId = 0;
+	GLuint diffuseLocId = 0;
+	GLuint lightColorLocId = 0;
+	GLuint textureId = 0;
 	Mesh* meshPtr;
 	Camera* cameraPtr;
 

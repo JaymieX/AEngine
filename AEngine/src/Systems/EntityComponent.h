@@ -45,10 +45,10 @@ public:
 	
 	Entity(Entity&& entity) noexcept :
 		components(std::move(entity.components)),
+		children(std::move(entity.children)),
 		componentArray(entity.componentArray),
 		componentBitset(entity.componentBitset),
 		active(entity.active) { }
-
 
 	void Update()
 	{
@@ -65,7 +65,7 @@ public:
 		for (auto& c : components) c->ResizeUpdate();
 	}
 
-	void Destroy() { active = false; }
+	void Destroy() { active = false; for(auto child : children) child->active = false; }
 
 	[[nodiscard]] bool isActive() const { return active; }
 
@@ -92,6 +92,15 @@ public:
 		return static_cast<T*>(c);
 	}
 
+	void AddEntity(Entity* childEntity)
+	{
+		children.emplace_back(childEntity);
+	}
+
+	Entity* GetChild(const int index) { return children[index]; }
+
+	std::vector<Entity*> GetChildren() const { return children; }
+
 	template<typename T> T* GetComponent() const
 	{
 		auto componentPtr(componentArray[getComponentTypeID<T>()]);
@@ -100,6 +109,7 @@ public:
 
 private:
 	std::vector<std::unique_ptr<Component>> components;
+	std::vector<Entity*> children;
 	ComponentArray componentArray;
 	ComponentBitset componentBitset;
 	bool active = true;
@@ -144,6 +154,15 @@ public:
 	Entity* CreateAndAddEntity()
 	{
 		std::unique_ptr<Entity> entityPtr = std::make_unique<Entity>();
+		entities.emplace_back(std::move(entityPtr));
+		return entities.at(entities.size() - 1).get();
+	}
+
+	template <typename ...T, typename ...TArgs>
+	Entity* CreateAndAddEntity(TArgs&& ...componentArgs)
+	{
+		std::unique_ptr<Entity> entityPtr = std::make_unique<Entity>();
+		entityPtr->AddComponent<T>(componentArgs);
 		entities.emplace_back(std::move(entityPtr));
 		return entities.at(entities.size() - 1).get();
 	}

@@ -3,13 +3,20 @@
 class Model
 {
 public:
-	Model();
-   ~Model();
+	Model() = default;
+   ~Model() = default;
+	
+	explicit Model(class EntityManager*, std::string, std::string, GLuint);
 
-   inline void AddMesh(class MeshRenderer* mr) { meshRenderers.push_back(mr); }
-
-   void Render();
-
+	void CreateSubModel(glm::vec3 pos, float angle, glm::vec3 rotationAxis, glm::vec3 scale);
+	void UpdateSubModel(int index, glm::vec3 pos, float angle, glm::vec3 rotationAxis, glm::vec3 scale);
+	glm::mat4 GetModelMatrix(int index); 
+	
 private:
-	std::vector<class MeshRenderer*> meshRenderers;
+	class Entity* modelEntityPtr;
+	class Transform* transformComponentPtr;
+	class Mesh* meshComponentPtr;
+	class MeshRenderer* meshRendererComponent;
+
+	std::vector<glm::mat4> submodels;
 };

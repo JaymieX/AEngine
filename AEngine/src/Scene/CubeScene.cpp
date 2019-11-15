@@ -3,7 +3,9 @@
 #include "Graphics/Mesh.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Camera.h"
+#include "Graphics/TextureHandler.h"
 #include "Components/Transform.h"
+#include "Graphics/Light.h"
 
 bool CubeScene::Initialize()
 {
@@ -11,6 +13,9 @@ bool CubeScene::Initialize()
 	
 	cubeEntityPtr = sceneEntityManagerPtr->CreateAndAddEntity();
 	cameraEntityPtr = sceneEntityManagerPtr->CreateAndAddEntity();
+	auto lightEntityPtr = sceneEntityManagerPtr->CreateAndAddEntity();
+
+	TextureHandler::GetInstance()->CreateTexture("checkerboard", "src/Resources/Textures/CheckerboardTexture.png");
 
 	Vertex v{};
 
@@ -232,18 +237,22 @@ bool CubeScene::Initialize()
 	v.color = glm::vec3(0.982f, 0.099f, 0.879f);
 	vertList.push_back(v);
 
+	//Adding Components To Light Object
+	lightEntityPtr->AddComponent<Transform>(glm::vec3(10.0f, 10.0f, -5.0f));
+	lightEntityPtr->AddComponent<Light>(0.5f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
+
 	//Adding Components To Camera Object
-	cameraEntityPtr->AddComponent<Transform>();
-	cameraEntityPtr->AddComponent<Camera>(45.0f, glm::vec2(0.2f, 50.0f));
+	cameraEntityPtr->AddComponent<Transform>(glm::vec3(0.0f, 0.0f, -5.0f));
+	auto cameraComponent = cameraEntityPtr->AddComponent<Camera>(45.0f, glm::vec2(0.2f, 50.0f));
+	cameraComponent->AddLight(lightEntityPtr);
 	
 	//Adding Components To Cube Object
 	cubeEntityPtr->AddComponent<Transform>();
-	cubeEntityPtr->AddComponent<Shader>("cubeShader", "vertCubeShader.glsl", "fragCubeShader.glsl");
+	cubeEntityPtr->AddComponent<Shader>("cubeTextureShader", "vertTextureCubeShader.glsl", "fragTextureCubeShader.glsl");
 	cubeEntityPtr->AddComponent<Mesh>(vertList);
-	cubeEntityPtr->AddComponent<MeshRenderer>(cameraEntityPtr, GL_TRIANGLES);
-
-	cameraEntityPtr->GetComponent<Transform>()->position = glm::vec3(0.0f, 0.0f, -5.0f);
-	
+	cubeEntityPtr->AddComponent<MeshRenderer>(cameraEntityPtr, 
+											  GL_TRIANGLES, 
+											  TextureHandler::GetInstance()->GetTextureId("checkerboard"));
 	return true;
 }
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Systems/EntityComponent.h"
+
 class Shader;
 class Model;
 

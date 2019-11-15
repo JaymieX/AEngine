@@ -2,21 +2,15 @@
 #include "TextureHandler.h"
 #include "Core/Logger.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 std::unique_ptr<TextureHandler> TextureHandler::instance(nullptr);
-std::map<std::string, TextureHandler::Texture*> TextureHandler::textures = std::map<std::string, TextureHandler::Texture*>();
+std::map<std::string, TextureHandler::Texture*> TextureHandler::textures = std::map<std::string, Texture*>();
 
-TextureHandler::~TextureHandler() 
+TextureHandler::~TextureHandler()
 {
-	if(!textures.empty()) 
-	{
-		for (auto texture : textures) 
-		{
-			glDeleteTextures(1, &texture.second->textureId);
-			delete texture.second, texture.second = nullptr;
-		}
-
-		textures.clear();
-	}
+	//GetInstance()->textures.clear();
 }
 
 TextureHandler* TextureHandler::GetInstance()
