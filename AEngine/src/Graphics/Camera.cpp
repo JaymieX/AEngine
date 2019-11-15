@@ -1,6 +1,7 @@
 #include <Core/AEpch.h>
 #include "Core/AEApplication.h"
 #include "Camera.h"
+#include "Light.h"
 
 Camera::Camera(const float fov, const glm::vec2 clipPlanes) : fov(fov), perspective(glm::mat4(1.0f)),
 															  orthographic(perspective), clipPlanes(clipPlanes),
