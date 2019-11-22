@@ -103,12 +103,11 @@
     <ClInclude Include="src\Core\Logger.h" />
     <ClInclude Include="src\Core\Timer.h" />
     <ClInclude Include="src\Core\Utils.h" />
+    <ClInclude Include="src\Events\IEvent.h" />
     <ClInclude Include="src\Events\MouseEventListener.h" />
-    <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Graphics\Camera.h" />
     <ClInclude Include="src\Graphics\Light.h" />
     <ClInclude Include="src\Graphics\Mesh.h" />
-    <ClInclude Include="src\Graphics\Model.h" />
     <ClInclude Include="src\Graphics\ObjLoader.h" />
     <ClInclude Include="src\Graphics\Shader.h" />
     <ClInclude Include="src\Graphics\TextureHandler.h" />
@@ -127,10 +126,8 @@
     <ClCompile Include="src\Core\Utils.cpp" />
     <ClCompile Include="src\Core\main.cpp" />
     <ClCompile Include="src\Events\MouseEventListener.cpp" />
-    <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Graphics\Camera.cpp" />
     <ClCompile Include="src\Graphics\Mesh.cpp" />
-    <ClCompile Include="src\Graphics\Model.cpp" />
     <ClCompile Include="src\Graphics\ObjLoader.cpp" />
     <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\TextureHandler.cpp" />

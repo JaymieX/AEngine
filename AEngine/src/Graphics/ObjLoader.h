@@ -1,17 +1,32 @@
 #pragma once
 
-using namespace glm;
-class ObjLoader {
+#include "Graphics/Mesh.h"
+
+class ObjLoader
+{
 public:
-	/// C11 precautions 
-	ObjLoader(const ObjLoader&) = delete;  /// Copy constructor
-	ObjLoader(ObjLoader&&) = delete;       /// Move constructor
-	ObjLoader& operator=(const ObjLoader&) = delete; /// Copy operator
-	ObjLoader& operator=(ObjLoader&&) = delete;      /// Move operator
+	~ObjLoader();
 
-	static std::vector<vec3> vertices;
-	static std::vector<vec2> uvCoords;
-	static std::vector<vec3> normals;
-	static bool loadOBJ(const char* path);
+	void LoadMeshData(const std::string& fileName);
+	void LoadMeshData(const std::string& fileName, const std::string& matName);
 
+	[[nodiscard]] std::vector<Vertex> GetVertices() const { return meshVertices; }
+	[[nodiscard]] std::vector<GLuint> GetIndices() const { return indices; }
+	[[nodiscard]] std::vector<MeshData> GetMeshData() const { return meshData; }
+
+private:
+	std::vector<glm::vec3> vertices = std::vector<glm::vec3>();
+	std::vector<glm::vec3> normals = std::vector<glm::vec3>();
+	std::vector<glm::vec2> uvCoords = std::vector<glm::vec2>();
+	std::vector<GLuint> indices = std::vector<GLuint>();
+	std::vector<GLuint> normalIndices = std::vector<GLuint>();
+	std::vector<GLuint> uvIndices = std::vector<GLuint>();
+	std::vector<Vertex> meshVertices = std::vector<Vertex>();
+	std::vector<MeshData> meshData = std::vector<MeshData>();
+
+	GLuint currentTexture = 0;
+
+	void PostProcessing();
+	void LoadMaterial(const std::string& fileName);
+	void LoadMaterialLibrary(const std::string& matName);
 };

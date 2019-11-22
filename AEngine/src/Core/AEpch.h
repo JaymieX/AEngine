@@ -27,6 +27,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#define RESOURCES(path) { return "src/Resources" + path; }
+
 #define XR_USE_PLATFORM_WIN32
 #define XR_USE_GRAPHICS_API_OPENGL
 #include <openxr/openxr.h>

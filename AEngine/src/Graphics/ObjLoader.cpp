@@ -1,97 +1,134 @@
 #include <Core/AEpch.h>
 #include "ObjLoader.h"
+#include "Core/Logger.h"
+#include "TextureHandler.h"
 
-/// Since theses vectors are static I need to initialize them here
-/// it's the tricky bit about static 
-std::vector<vec3> ObjLoader::normals;
-std::vector<vec3> ObjLoader::vertices;
-std::vector<vec2> ObjLoader::uvCoords;
-
-bool ObjLoader::loadOBJ(const char* path) {
-	printf("Loading OBJ file %s...\n", path);
-	normals.clear();
+ObjLoader::~ObjLoader()
+{
 	vertices.clear();
+	normals.clear();
 	uvCoords.clear();
-	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-	std::vector<vec3> temp_vertices;
-	std::vector<vec2> temp_uvs;
-	std::vector<vec3> temp_normals;
+	indices.clear();
+	normalIndices.clear();
+	uvIndices.clear();
+	meshVertices.clear();
+	meshData.clear();
+}
 
-
-	FILE* file;
-	fopen_s(&file, path, "r");
-	if (file == nullptr) {
-		printf("Can't open your file %s \n", path);
-		return false;
+void ObjLoader::LoadMeshData(const std::string& fileName)
+{
+	std::ifstream in(fileName, std::ios::in);
+	if (!in) {
+		LOG_ERROR("Cannot open OBJ file: " + fileName, "ObjLoader.cpp", __LINE__);
+		return;
 	}
 
-	while (true) {
-		char lineHeader[128];
-		/// read the first word of the line
-		int res = fscanf_s(file, "%s", lineHeader, sizeof(lineHeader));
-		if (res == EOF) {
-			break; /// End Of File
+	std::string line;
+	while (std::getline(in, line)) {
+		// Order: Vert Tex Normal
+		// VERTEX DATA
+		if (line.substr(0, 2) == "v ") {
+			glm::vec3 vert;
+			double x, y, z;
+			std::istringstream v(line.substr(2));
+			v >> x >> y >> z;
+			vert = glm::vec3(x, y, z);
+			vertices.push_back(vert);
+			//std::cout << "V " << x << ", " << y << ", " << z << std::endl;
 		}
-		if (strcmp(lineHeader, "v") == 0) {
-			vec3 vertex;
-			fscanf_s(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-			temp_vertices.push_back(vertex);
+		// NORMAL DATA
+		if (line.substr(0, 2) == "vn") {
+			glm::vec3 normal;
+			double x, y, z;
+			std::istringstream v(line.substr(2));
+			v >> x >> y >> z;
+			normal = glm::vec3(x, y, z);
+			normals.push_back(normal);
+			//std::cout << "VN " << x << ", " << y << ", " << z << std::endl;
 		}
-		else if (strcmp(lineHeader, "vt") == 0) {
-			vec2 uv;
-			fscanf_s(file, "%f %f\n", &uv.x, &uv.y);
-			uv.y = -uv.y; /// Grr 
-			temp_uvs.push_back(uv);
+		// TEXUTRE DATA
+		if (line.substr(0, 2) == "vt") {
+			glm::vec2 textureCoord;
+			double x, y;
+			std::istringstream v(line.substr(2));
+			v >> x >> y;
+			textureCoord = glm::vec2(x, y);
+			uvCoords.push_back(textureCoord);
+			//std::cout << "VT " << x << ", " << y << std::endl;
 		}
-		else if (strcmp(lineHeader, "vn") == 0) {
-			vec3 normal;
-			fscanf_s(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-			temp_normals.push_back(normal);
-		}
-		else if (strcmp(lineHeader, "f") == 0) {
-			std::string vertex1, vertex2, vertex3;
-			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-			int matches = fscanf_s(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
-			if (matches != 9) {
-				printf("Error: Can't read the file - this is a dumb reader");
-				return false;
+		// FACE DATA
+		if (line.substr(0, 1) == "f") {
+			glm::vec3 data;
+			unsigned int x[3], y[3], z[3];
+			char s;
+			std::istringstream v(line.substr(2));
+			v >> x[0] >> s >> y[0] >> s >> z[0] >> x[1] >> s >> y[1] >> s >> z[1] >> x[2] >> s >> y[2] >> s >> z[2];
+			for (int i = 0; i < 3; i++) {
+				indices.push_back(x[i]);
+				uvIndices.push_back(y[i]);
+				normalIndices.push_back(z[i]);
 			}
-			vertexIndices.push_back(vertexIndex[0]);
-			vertexIndices.push_back(vertexIndex[1]);
-			vertexIndices.push_back(vertexIndex[2]);
-			uvIndices.push_back(uvIndex[0]);
-			uvIndices.push_back(uvIndex[1]);
-			uvIndices.push_back(uvIndex[2]);
-			normalIndices.push_back(normalIndex[0]);
-			normalIndices.push_back(normalIndex[1]);
-			normalIndices.push_back(normalIndex[2]);
-		}
-		else {
-			/// the data is probably a comment, eat up the rest of the line and throw it away
-			char stupidBuffer[1000];
-			fgets(stupidBuffer, 1000, file);
 		}
 
+		// NEW MATERIAL
+		else if (line.substr(0, 7) == "usemtl ") {
+			if (!indices.empty()) {
+				PostProcessing();
+			}
+			LoadMaterial(line.substr(7));
+		}
 	}
+	PostProcessing();
+}
 
-	/// For each vertex of each triangle
-	for (unsigned int i = 0; i < vertexIndices.size(); i++) {
+void ObjLoader::LoadMeshData(const std::string& fileName, const std::string& matName)
+{
+	LoadMaterialLibrary(matName);
+	LoadMeshData(fileName);
+}
 
-		// Get the indices of its attributes
-		unsigned int vertexIndex = vertexIndices[i];
-		unsigned int uvIndex = uvIndices[i];
-		unsigned int normalIndex = normalIndices[i];
-
-		// Get the attributes thanks to the index
-		vec3 vertex = temp_vertices[vertexIndex - 1];
-		vec2 uv = temp_uvs[uvIndex - 1];
-		vec3 normal = temp_normals[normalIndex - 1];
-
-		// Put the attributes in buffers
-		vertices.push_back(vertex);
-		uvCoords.push_back(uv);
-		normals.push_back(normal);
-
+void ObjLoader::PostProcessing()
+{
+	for (int i = 0; i < indices.size(); i++) {
+		Vertex vert{};
+		vert.position = vertices[indices[i] - 1];
+		vert.normal = normals[normalIndices[i] - 1];
+		vert.uvCoords = uvCoords[uvIndices[i] - 1];
+		meshVertices.push_back(vert);
 	}
-	return true;
+	MeshData mesh;
+	mesh.vertices = meshVertices;
+	mesh.indices = indices;
+	mesh.textureId = currentTexture;
+	meshData.push_back(mesh);
+
+	indices.clear();
+	normalIndices.clear();
+	uvIndices.clear();
+
+	currentTexture = 0;
+}
+
+void ObjLoader::LoadMaterial(const std::string& fileName)
+{
+	currentTexture = TextureHandler::GetInstance()->GetTextureId(fileName);
+	if (currentTexture == 0) {
+		TextureHandler::GetInstance()->CreateTexture(fileName, "src/Resources/Textures/" + fileName + ".jpg");
+		currentTexture = TextureHandler::GetInstance()->GetTextureId(fileName);
+	}
+}
+
+void ObjLoader::LoadMaterialLibrary(const std::string& matName)
+{
+	std::ifstream in(matName.c_str(), std::ios::in);
+	if (!in) {
+		LOG_ERROR("Could not open MTL file: " + matName, "ObjLoader.cpp", __LINE__);
+		return;
+	}
+	std::string line;
+	while (std::getline(in, line)) {
+		if (line.substr(0, 7) == "newmtl") {
+			LoadMaterial(line.substr(7));
+		}
+	}
 }

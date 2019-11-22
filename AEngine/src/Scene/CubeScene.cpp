@@ -249,10 +249,9 @@ bool CubeScene::Initialize()
 	//Adding Components To Cube Object
 	cubeEntityPtr->AddComponent<Transform>();
 	cubeEntityPtr->AddComponent<Shader>("cubeTextureShader", "vertTextureCubeShader.glsl", "fragTextureCubeShader.glsl");
-	cubeEntityPtr->AddComponent<Mesh>(vertList);
+	cubeEntityPtr->AddComponent<MeshFilter>();
 	cubeEntityPtr->AddComponent<MeshRenderer>(cameraEntityPtr, 
-											  GL_TRIANGLES, 
-											  TextureHandler::GetInstance()->GetTextureId("checkerboard"));
+											  GL_TRIANGLES);
 	return true;
 }
 

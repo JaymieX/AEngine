@@ -4,6 +4,8 @@
 #include "Core/Timer.h"
 #include "Scene/IScene.h"
 #include "Scene/CubeScene.h"
+#include "Scene/ModelScene.h"
+#include "Events/MouseEventListener.h"
 
 std::unique_ptr<AEApplication> AEApplication::instance(nullptr);
 
@@ -43,7 +45,9 @@ bool AEApplication::Initialize()
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, windowPtr->GetWidth(), windowPtr->GetHeight());
 
-	BuildScene(new CubeScene());
+	MouseEventListener::RegisterCallbacks(windowPtr->GetWindow());
+
+	BuildScene(new ModelScene());
 
 	graphicsTimerPtr = std::make_unique<Timer>(90.0);
 	graphicsTimerPtr->SetTimerAction(&AEApplication::Update, this);

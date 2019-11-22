@@ -39,7 +39,6 @@
     <ClInclude Include="src\Core\Utils.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Graphics\Camera.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -47,9 +46,6 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Mesh.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Model.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\ObjLoader.h">
@@ -77,6 +73,7 @@
       <Filter>Window</Filter>
     </ClInclude>
     <ClInclude Include="src\Events\MouseEventListener.h" />
+    <ClInclude Include="src\Events\IEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\AEApplication.cpp">
@@ -94,14 +91,10 @@
     <ClCompile Include="src\Core\main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Graphics\Camera.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Mesh.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Model.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\ObjLoader.cpp">

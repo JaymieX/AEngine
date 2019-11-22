@@ -3,41 +3,29 @@
 #include "Shader.h"
 #include "Components/Transform.h"
 #include "Light.h"
+#include "Graphics/ObjLoader.h"
 
-Mesh::Mesh(std::vector<Vertex>& vertices) : vertices(vertices) {}
+Mesh::~Mesh() { if(objLoaderPtr) delete objLoaderPtr, objLoaderPtr = nullptr; }
 
-Mesh::Mesh(Mesh&& mesh) noexcept : vertices(mesh.vertices), indices(mesh.indices) { }
+Mesh::Mesh(std::string objPath)
+{
+	objLoaderPtr = new ObjLoader();
+	objLoaderPtr->LoadMeshData(objPath);
+	meshes = objLoaderPtr->GetMeshData();
+}
 
-Mesh::~Mesh() { vertices.clear(); }
+Mesh::Mesh(const std::string objPath, const std::string materialPath)
+{
+	objLoaderPtr = new ObjLoader();
+	objLoaderPtr->LoadMeshData(objPath, materialPath);
+	meshes = objLoaderPtr->GetMeshData();
+}
+
+MeshFilter::MeshFilter(Mesh* meshPtr) : meshPtr(meshPtr) {}
 
 MeshRenderer::MeshRenderer(Entity* camera, const GLenum drawMode) : drawMode(drawMode),
-																	meshPtr(nullptr),
 																	cameraPtr(camera->GetComponent<Camera>())
 																	{}
-
-MeshRenderer::MeshRenderer(Entity* camera, const GLenum drawMode, const GLuint textureId): drawMode(drawMode),
-                                                                                           meshPtr(nullptr),
-                                                                                           cameraPtr(camera->GetComponent<Camera>())
-{
-	this->textureId = textureId;
-}
-
-MeshRenderer::MeshRenderer(MeshRenderer&& renderer) noexcept : drawMode(renderer.drawMode), meshPtr(nullptr), cameraPtr(renderer.cameraPtr) 
-{
-	vao = renderer.vao;
-	vbo = renderer.vbo;
-	modelLocId = renderer.modelLocId;
-	viewLocId = renderer.viewLocId;
-	projLocId = renderer.projLocId;
-	textureLocId = renderer.textureLocId;
-	cameraPosLocId = renderer.cameraPosLocId;
-	lightPosLocId = renderer.lightPosLocId;
-	ambientLocId = renderer.ambientLocId;
-	diffuseLocId = renderer.diffuseLocId;
-	lightColorLocId = renderer.lightColorLocId;
-	textureId = renderer.textureId;
-}
-
 
 MeshRenderer::~MeshRenderer()
 {
@@ -47,7 +35,7 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Start()
 {
-	meshPtr = boundEntity->GetComponent<Mesh>();
+	meshPtr = boundEntity->GetComponent<MeshFilter>()->meshPtr;
 	GenBuffers();
 }
 
@@ -55,9 +43,11 @@ void MeshRenderer::Render()
 {
 	boundEntity->GetComponent<Shader>()->UseProgram();
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	glUniform1i(textureLocId, 0);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	glBindTexture(GL_TEXTURE_2D, meshPtr->meshes[0].textureId);
 
 	glUniform3fv(cameraPosLocId, 1, glm::value_ptr(cameraPtr->GetPosition()));
 	glUniform3fv(lightPosLocId, 1, glm::value_ptr(cameraPtr->GetLights()[0]->GetComponent<Transform>()->position));
@@ -72,7 +62,7 @@ void MeshRenderer::Render()
 	
 	glBindVertexArray(vao);
 	glUniformMatrix4fv(modelLocId, 1, GL_FALSE, glm::value_ptr(boundEntity->GetComponent<Transform>()->GetTransformMatrix()));
-	glDrawArrays(drawMode, 0, static_cast<GLsizei>(meshPtr->vertices.size()));
+	glDrawElements(drawMode, meshPtr->meshes[0].indices.size(), GL_UNSIGNED_INT, nullptr);
 
 	glBindVertexArray(0);
 }
@@ -92,8 +82,13 @@ void MeshRenderer::GenBuffers()
 	//Create & Bind Vertex Buffer Object
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, meshPtr->vertices.size() * sizeof(Vertex), &meshPtr->vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, meshPtr->meshes[0].vertices.size() * sizeof(Vertex), &meshPtr->meshes[0].vertices[0], GL_STATIC_DRAW);
 
+	//Create & Bind Index Buffer Object
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshPtr->meshes[0].indices.size() * sizeof(GLuint), &meshPtr->meshes[0].indices[0], GL_STATIC_DRAW);
+	
 	// Position Attribute
 	glVertexAttribPointer(positionId, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), static_cast<GLvoid*>(nullptr));
 	glEnableVertexAttribArray(positionId);
