@@ -26,7 +26,7 @@ private:
 	
 	bool sceneActive = false;
 
-	XrInstance xr_instance = {};
+	//XrInstance xr_instance = {};
 
 	std::unique_ptr<class IScene> scenePtr;
 	std::unique_ptr<class Window> windowPtr;

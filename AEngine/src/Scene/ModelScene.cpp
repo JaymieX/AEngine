@@ -38,11 +38,18 @@ void ModelScene::Update(const float dt)
 	sceneEntityManagerPtr->Update();
 	sceneEntityManagerPtr->SeekAndDestroy();
 
-	cameraEntityPtr->GetComponent<Transform>()->position += 
-		glm::vec3(MouseEventListener::offsetMousePosition.x,
-				  MouseEventListener::offsetMousePosition.y,
-			   MouseEventListener::scrollPosition.x) * 0.0005f;
-	modelEntityPtr->GetComponent<Transform>()->angle += 0.5f;
+	//std::cout << glm::to_string(MouseEventListener::offsetMousePosition) << std::endl;
+
+	cameraEntityPtr->GetComponent<Transform>()->position +=
+		glm::vec3(0,0, MouseEventListener::scrollPosition.y) * 0.005f;
+
+	cameraEntityPtr->GetComponent<Transform>()->angle += 1.0f;
+	cameraEntityPtr->GetComponent<Transform>()->angleAxis = glm::vec3(MouseEventListener::offsetMousePosition.y * 0.0005f, MouseEventListener::offsetMousePosition.x * 0.0005f, 0.0f);
+	//cameraEntityPtr->GetComponent<Transform>()->rotation += 
+	//	glm::angleAxis(MouseEventListener::offsetMousePosition.x * 0.0005f, glm::vec3(0.0f, 1.0f, 0.0f)) + 
+	//	glm::angleAxis(MouseEventListener::offsetMousePosition.y * 0.0005f, glm::vec3(1.0f, 0.0f, 0.0f));
+	//
+	modelEntityPtr->GetComponent<Transform>()->angle += 1.0f;
 }
 
 void ModelScene::Render() const

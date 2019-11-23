@@ -1,24 +1,45 @@
 #include <Core/AEpch.h>
 #include "MouseEventListener.h"
+#include "Core/AEApplication.h"
 
-glm::vec2 MouseEventListener::oldMousePosition = glm::vec2();
+glm::vec2 MouseEventListener::previousMousePosition = glm::vec2();
 glm::vec2 MouseEventListener::currentMousePosition = glm::vec2();
 glm::vec2 MouseEventListener::offsetMousePosition = glm::vec2();
 glm::vec2 MouseEventListener::scrollPosition = glm::vec2();
+bool MouseEventListener::firstGather = true;
 
 void MouseEventListener::RegisterCallbacks(GLFWwindow* window)
 {
 	glfwSetCursorPosCallback(window, MouseMovedCallback);
 	glfwSetMouseButtonCallback(window, MouseButtonCallback);
 	glfwSetScrollCallback(window, MouseScrollCallback);
+	glfwSetCursorPos(window, 
+					 AEApplication::GetInstance()->GetWindowSize().x / 2, 
+					 AEApplication::GetInstance()->GetWindowSize().y / 2);
 }
 
 void MouseEventListener::MouseMovedCallback(GLFWwindow* window, double x, double y)
 {
-	oldMousePosition = currentMousePosition;
-	currentMousePosition.x = static_cast<float>(x);
-	currentMousePosition.y = static_cast<float>(y);
-	offsetMousePosition = oldMousePosition - currentMousePosition;
+	auto temp = glm::vec2(static_cast<float>(x), static_cast<float>(y));
+	temp.y = AEApplication::GetInstance()->GetWindowSize().y - temp.y;
+
+	if (firstGather)
+	{
+		previousMousePosition = temp;
+		currentMousePosition = temp;
+		firstGather = false;
+	}
+	else 
+	{
+		previousMousePosition = currentMousePosition;
+		currentMousePosition = temp;
+	}
+
+	offsetMousePosition.x = currentMousePosition.x - previousMousePosition.x;
+	offsetMousePosition.y = previousMousePosition.y - currentMousePosition.y;
+
+	//std::cout << glm::to_string(offsetMousePosition) << std::endl;
+
 }
 
 void MouseEventListener::MouseButtonCallback(GLFWwindow* window, int btn, int action, int mods)
@@ -33,6 +54,8 @@ void MouseEventListener::MouseScrollCallback(GLFWwindow* window, double x, doubl
 {
 	scrollPosition.x = static_cast<float>(x);
 	scrollPosition.y = static_cast<float>(y);
+
+	//std::cout << glm::to_string(scrollPosition) << std::endl;
 }
 
 void MouseEventListener::MousePressedEvent(int button)

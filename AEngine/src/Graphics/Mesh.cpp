@@ -43,7 +43,7 @@ void MeshRenderer::Render()
 {
 	boundEntity->GetComponent<Shader>()->UseProgram();
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glUniform1i(textureLocId, 0);
 	glActiveTexture(GL_TEXTURE0);
@@ -62,7 +62,8 @@ void MeshRenderer::Render()
 	
 	glBindVertexArray(vao);
 	glUniformMatrix4fv(modelLocId, 1, GL_FALSE, glm::value_ptr(boundEntity->GetComponent<Transform>()->GetTransformMatrix()));
-	glDrawElements(drawMode, meshPtr->meshes[0].indices.size(), GL_UNSIGNED_INT, nullptr);
+	//glDrawElements(drawMode, static_cast<GLsizei>(meshPtr->meshes[0].indices.size()), GL_UNSIGNED_INT, nullptr);
+	glDrawArrays(drawMode, 0, meshPtr->meshes[0].vertices.size());
 
 	glBindVertexArray(0);
 }

@@ -91,7 +91,7 @@ void ObjLoader::PostProcessing()
 {
 	for (int i = 0; i < indices.size(); i++) {
 		Vertex vert{};
-		vert.position = vertices[indices[i] - 1];
+		vert.position = vertices[indices[i] - 1]; std::cout << i << ":" << glm::to_string(vert.position) << std::endl;
 		vert.normal = normals[normalIndices[i] - 1];
 		vert.uvCoords = uvCoords[uvIndices[i] - 1];
 		meshVertices.push_back(vert);

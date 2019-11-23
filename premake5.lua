@@ -40,7 +40,7 @@ project "AEngine"
 		"%{prj.name}/src",
 		"%{prj.name}/external/glm/glm",
 		"%{prj.name}/external/stb",
-		"%{prj.name}/external/openxr/include",
+		--"%{prj.name}/external/openxr/include",
 		path.join(GLAD_DIR, "include"),
 		path.join(GLFW_DIR, "include"),
 	}
@@ -50,7 +50,7 @@ project "AEngine"
 		"glad",
 		"glfw",
 		"opengl32.lib",
-		"openxr_loader"
+		--"openxr_loader"
 	}
 
 	filter "system:windows"

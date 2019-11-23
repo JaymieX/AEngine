@@ -41,9 +41,9 @@ void Camera::ResizeUpdate()
 
 void Camera::UpdateCameraOrientation()
 {
-	forward.x = cos(glm::radians(transformPtr->rotationAxis.x)) * cos(glm::radians(transformPtr->rotationAxis.y));
-	forward.y = sin(glm::radians(transformPtr->rotationAxis.y));
-	forward.z = sin(glm::radians(transformPtr->rotationAxis.x)) * cos(glm::radians(transformPtr->rotationAxis.y));
+	forward.x = cos(glm::radians(transformPtr->angleAxis.x)) * cos(glm::radians(transformPtr->angleAxis.y));
+	forward.y = sin(glm::radians(transformPtr->angleAxis.y));
+	forward.z = sin(glm::radians(transformPtr->angleAxis.x)) * cos(glm::radians(transformPtr->angleAxis.y));
 	forward = glm::normalize(forward);
 
 	right = glm::normalize(glm::cross(forward, worldUp));
