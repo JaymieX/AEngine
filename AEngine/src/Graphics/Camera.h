@@ -7,13 +7,13 @@ class Camera final : public Component
 {
 public:
 	Camera() = default;
-	Camera(float, glm::vec2);
-	
+	Camera(float, glm::vec2, bool lookAtEnabled = true);
+
 	void Start() override;
 	void Update() override;
 	void ResizeUpdate() override;
 
-	void AddLight(Entity* light){ lights.emplace_back(light); }
+	void AddLight(Entity* light) { lights.emplace_back(light); }
 
 	[[nodiscard]] inline std::vector<Entity*> GetLights() const { return lights; }
 	[[nodiscard]] inline glm::vec3 GetPosition() const { return transformPtr->position; }
@@ -21,16 +21,17 @@ public:
 	[[nodiscard]] inline glm::mat4 GetOrthographicMatrix() const { return orthographic; }
 	[[nodiscard]] inline glm::mat4 GetViewMatrix() const
 	{
-		return glm::lookAt(transformPtr->position, glm::normalize(transformPtr->position - glm::vec3(0.0f)), up);
+		return transformPtr->GetOrientationMatrix();
 	}
 
 private:
 	void UpdateCameraOrientation();
 
 	std::vector<Entity*> lights;
-	
+
+
 	Transform* transformPtr;
-	
+	bool lookAtEnabled = true;
 	float fov = 0;
 	glm::mat4 perspective, orthographic;
 	glm::vec2 clipPlanes;

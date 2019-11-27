@@ -3,47 +3,61 @@
 #include <Core/AEpch.h>
 #include "Systems/EntityComponent.h"
 
-struct Transform final : Component
+class Transform final : public Component
 {
-	Transform() : angle(0), position(glm::vec3(0)),
-				  angleAxis(glm::vec3(0.0f, 1.0f, 0.0f)),
-				  scale(glm::vec3(1.0f)) {}
+public:
+	Transform() : position(glm::vec3(0)),
+	              angleAxis(glm::vec3(0.0f, 1.0f, 0.0f)),
+	              eulerAngles(glm::vec3(0)), scale(glm::vec3(1.0f)) {}
 
-	explicit Transform(const glm::vec3 position) : angle(0), position(position),
-												   angleAxis(glm::vec3(0.0f, 1.0f, 0.0f)),
+	explicit Transform(const glm::vec3 position) : position(position),
+	                                               angleAxis(glm::vec3(0.0f, 1.0f, 0.0f)),
+	                                               eulerAngles(glm::vec3(0)),
 												   scale(glm::vec3(1.0f)) {}
 
-	[[nodiscard]] inline glm::mat4 GetTransformMatrix() const
+	[[nodiscard]] glm::vec3 GetEuler() const { return eulerAngles; }
+	
+	[[nodiscard]] glm::mat4 GetTransformMatrix() const
 	{
-		glm::mat4 transformMatrix(1.0f);
-		transformMatrix = glm::translate(transformMatrix, position);
-		transformMatrix = glm::rotate(transformMatrix, glm::radians(angle), angleAxis);
-		transformMatrix = glm::scale(transformMatrix, scale);
+		auto transformMatrix = glm::mat4(1.0f);
+		transformMatrix = GetTranslationMatrix(transformMatrix);
+		transformMatrix = GetRotationMatrix(transformMatrix);
+		transformMatrix = GetScalingMatrix(transformMatrix);
 		return transformMatrix;
 	}
 
-	void Start() override
+	[[nodiscard]] glm::mat4 GetOrientationMatrix() const
 	{
-		ConvertRotation();
-	}
-
-	void Update() override
-	{
-		ConvertRotation();
+		auto matrix = glm::mat4(1.0f);
+		matrix = GetRotationMatrix(matrix);
+		matrix = GetTranslationMatrix(matrix);
+		return matrix;
 	}
 	
 	float angle = 0;
-	glm::quat rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	glm::vec3 eulerAngles;
+	glm::quat rotation = glm::quat(glm::vec4(0.0f));
 	glm::vec3 position;
 	glm::vec3 angleAxis;
+	glm::vec3 eulerAngles;
 	glm::vec3 scale;
 
 private:
-	void ConvertRotation()
+	[[nodiscard]] glm::mat4 GetTranslationMatrix(const glm::mat4 mat) const
 	{
-		eulerAngles = glm::eulerAngles(rotation);
-		//angle = glm::angle(rotation);
-		//angleAxis = glm::axis(rotation);
+		return glm::translate(mat, position);
 	}
+
+	[[nodiscard]] glm::mat4 GetRotationMatrix(const glm::mat4 mat) const
+	{
+		return mat * glm::mat4_cast(rotation);
+	}
+
+	[[nodiscard]] glm::mat4 GetScalingMatrix(const glm::mat4 mat) const
+	{
+		return glm::scale(mat, scale);
+	}
+
+	void Start() override { ConvertRotation(); }
+	void Update() override { ConvertRotation(); }
+	void ConvertRotation() { eulerAngles = glm::eulerAngles(rotation); }
 };

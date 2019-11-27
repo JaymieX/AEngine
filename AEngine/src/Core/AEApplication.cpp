@@ -3,9 +3,8 @@
 #include "Window/Window.h"
 #include "Core/Timer.h"
 #include "Scene/IScene.h"
-#include "Scene/CubeScene.h"
 #include "Scene/ModelScene.h"
-#include "Events/MouseEventListener.h"
+#include "Events/MouseEvent.h"
 
 std::unique_ptr<AEApplication> AEApplication::instance(nullptr);
 
@@ -45,7 +44,7 @@ bool AEApplication::Initialize()
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, windowPtr->GetWidth(), windowPtr->GetHeight());
 
-	MouseEventListener::RegisterCallbacks(windowPtr->GetWindow());
+	MouseEventDispatcher::GetDispatcher()->RegisterCallbacks(windowPtr->GetWindow());
 
 	BuildScene(new ModelScene());
 

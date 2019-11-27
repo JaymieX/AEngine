@@ -104,13 +104,14 @@
     <ClInclude Include="src\Core\Timer.h" />
     <ClInclude Include="src\Core\Utils.h" />
     <ClInclude Include="src\Events\IEvent.h" />
-    <ClInclude Include="src\Events\MouseEventListener.h" />
+    <ClInclude Include="src\Events\MouseEvent.h" />
     <ClInclude Include="src\Graphics\Camera.h" />
     <ClInclude Include="src\Graphics\Light.h" />
     <ClInclude Include="src\Graphics\Mesh.h" />
     <ClInclude Include="src\Graphics\ObjLoader.h" />
     <ClInclude Include="src\Graphics\Shader.h" />
     <ClInclude Include="src\Graphics\TextureHandler.h" />
+    <ClInclude Include="src\Physics\BoundingBox.h" />
     <ClInclude Include="src\Scene\CubeScene.h" />
     <ClInclude Include="src\Scene\IScene.h" />
     <ClInclude Include="src\Scene\ModelScene.h" />
@@ -125,7 +126,7 @@
     <ClCompile Include="src\Core\Logger.cpp" />
     <ClCompile Include="src\Core\Utils.cpp" />
     <ClCompile Include="src\Core\main.cpp" />
-    <ClCompile Include="src\Events\MouseEventListener.cpp" />
+    <ClCompile Include="src\Events\MouseEvent.cpp" />
     <ClCompile Include="src\Graphics\Camera.cpp" />
     <ClCompile Include="src\Graphics\Mesh.cpp" />
     <ClCompile Include="src\Graphics\ObjLoader.cpp" />

@@ -58,7 +58,6 @@ void ObjLoader::LoadMeshData(const std::string& fileName)
 		}
 		// FACE DATA
 		if (line.substr(0, 1) == "f") {
-			glm::vec3 data;
 			unsigned int x[3], y[3], z[3];
 			char s;
 			std::istringstream v(line.substr(2));

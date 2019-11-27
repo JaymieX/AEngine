@@ -73,7 +73,6 @@ public:
 private:
 	GLuint vao = 0;
 	GLuint vbo = 0;
-	GLuint ebo = 0;
 	GLuint modelLocId = 0;
 	GLuint viewLocId = 0;
 	GLuint projLocId = 0;

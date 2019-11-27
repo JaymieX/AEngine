@@ -26,6 +26,7 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 #include <gtx/string_cast.hpp>
+#include <gtc/quaternion.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 

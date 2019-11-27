@@ -45,9 +45,6 @@
     <ClInclude Include="src\Events\IEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\MouseEventListener.h">
-      <Filter>Events</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\Camera.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -81,6 +78,10 @@
     <ClInclude Include="src\Window\Window.h">
       <Filter>Window</Filter>
     </ClInclude>
+    <ClInclude Include="src\Events\MouseEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\BoundingBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\AEApplication.cpp">
@@ -97,9 +98,6 @@
     </ClCompile>
     <ClCompile Include="src\Core\main.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Events\MouseEventListener.cpp">
-      <Filter>Events</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Camera.cpp">
       <Filter>Graphics</Filter>
@@ -124,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="src\Window\Window.cpp">
       <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Events\MouseEvent.cpp">
+      <Filter>Events</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 #include "Camera.h"
 #include "Light.h"
 
-Camera::Camera(const float fov, const glm::vec2 clipPlanes) : fov(fov), perspective(glm::mat4(1.0f)),
+Camera::Camera(const float fov, const glm::vec2 clipPlanes, bool lookAtEnabled) : lookAtEnabled(lookAtEnabled), fov(fov), perspective(glm::mat4(1.0f)),
 															  orthographic(perspective), clipPlanes(clipPlanes),
 															  forward(glm::vec3(0.0f, 0.0f, -1.0f)),
 															  up(glm::vec3(0.0f, 1.0f, 0.0f)),
