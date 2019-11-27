@@ -3,34 +3,58 @@
 #include <Systems/EntityComponent.h>
 #include "Graphics/Mesh.h"
 
-constexpr float Magnitude(glm::vec3 v){ return (v.x * v.x) + (v.y * v.y) + (v.z * v.z);} 
+constexpr void LimitScale(glm::vec3& v)
+{
+	v.x = v.x < 1.0f ? v.x / 2.0f : v.x;
+	v.y = v.y < 1.0f ? v.y / 2.0f : v.y;
+	v.z = v.z < 1.0f ? v.z / 2.0f : v.z;
+}
 
 struct BoundingBox : Component
 {
 	BoundingBox() = default;
-	BoundingBox(glm::mat4 transform) : transformationMatrix(transform) {}
 
 	void Start() override
 	{
+		transformPtr = boundEntity->GetComponent<Transform>();
+		
 		auto meshes = boundEntity->GetComponent<MeshFilter>()->meshPtr->meshes;
 		for(const auto& mesh : meshes)
 		{
 			for(auto vertex : mesh.vertices)
 			{
-				if(Magnitude(vertex.position) > Magnitude(maximum))
-					maximum = vertex.position;
-
-				if(Magnitude(vertex.position) < Magnitude(minimum))
-					minimum = vertex.position;
+				Minimum(vertex.position, minimum);
+				Maximum(vertex.position, maximum);
 			}
 		}
 	}
 
-	void SetMinMax(glm::vec3 min, glm::vec3 max) { minimum = min; maximum = max; }
+	void Update() override
+	{
+		auto scaleFactor = transformPtr->scale;
+		LimitScale(scaleFactor);
+		transformedMaximum = maximum * scaleFactor;
+		transformedMinimum = minimum * scaleFactor;
+		std::cout << "Model Scale: "<< glm::to_string(scaleFactor) << std::endl;
+	}
+
+	void Print() const
+	{
+		std::cout << "Bounding Box Min: " << glm::to_string(minimum) << std::endl
+				  << "Bounding Box Max: " << glm::to_string(maximum) << std::endl;
+	}
+	void PrintT() const
+	{
+		std::cout << "Bounding Box Min: " << glm::to_string(transformedMinimum) << std::endl
+				  << "Bounding Box Max: " << glm::to_string(transformedMaximum) << std::endl;
+	}
 	
 	glm::vec3 maximum = glm::vec3(0.0f);
-	glm::vec3 minimum = glm::vec3(0.0f);
-	glm::mat4 transformationMatrix = glm::mat4(0.0f);
+	glm::vec3 minimum = glm::vec3(1.0f);
+	glm::vec3 transformedMaximum = glm::vec3(0.0f);
+	glm::vec3 transformedMinimum  = glm::vec3(1.0f);
+	
+	Transform* transformPtr = nullptr;
 };
 
 

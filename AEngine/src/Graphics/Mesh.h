@@ -3,13 +3,11 @@
 #include "Systems/EntityComponent.h"
 #include "Graphics/Camera.h"
 
-using namespace glm;
-
 struct Vertex {
-	vec3 position;
-	vec3 normal;
-	vec3 color;
-	vec2 uvCoords;
+	glm::vec3 position;
+	glm::vec3 normal;
+	glm::vec3 color;
+	glm::vec2 uvCoords;
 };
 
 struct MeshData

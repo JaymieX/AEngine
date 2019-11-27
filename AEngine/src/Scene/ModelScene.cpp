@@ -59,6 +59,8 @@ void ModelScene::Update(const float dt)
 
 	static auto angle = 0.0f;
 	modelEntityPtr->GetComponent<Transform>()->rotation = glm::quat(glm::vec3(0.0f, glm::radians(++angle), 0.0f));
+	modelEntityPtr->GetComponent<Transform>()->scale += glm::vec3(0.001f, -0.001f, 0.01f); 
+	modelEntityPtr->GetComponent<BoundingBox>()->PrintT();
 }
 
 void ModelScene::Render() const

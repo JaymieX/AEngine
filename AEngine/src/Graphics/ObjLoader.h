@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics/Mesh.h"
+#include "Physics/BoundingBox.h"
 
 class ObjLoader
 {
@@ -10,6 +11,7 @@ public:
 	void LoadMeshData(const std::string& fileName);
 	void LoadMeshData(const std::string& fileName, const std::string& matName);
 
+	//[[nodiscard]] BoundingBox GetBoundingBox() const { return box; }
 	[[nodiscard]] std::vector<Vertex> GetVertices() const { return meshVertices; }
 	[[nodiscard]] std::vector<GLuint> GetIndices() const { return indices; }
 	[[nodiscard]] std::vector<MeshData> GetMeshData() const { return meshData; }
@@ -24,6 +26,7 @@ private:
 	std::vector<Vertex> meshVertices = std::vector<Vertex>();
 	std::vector<MeshData> meshData = std::vector<MeshData>();
 
+	//BoundingBox box{};
 	GLuint currentTexture = 0;
 
 	void PostProcessing();
