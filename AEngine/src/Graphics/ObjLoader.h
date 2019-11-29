@@ -10,11 +10,10 @@ public:
 
 	void LoadMeshData(const std::string& fileName);
 	void LoadMeshData(const std::string& fileName, const std::string& matName);
-
-	//[[nodiscard]] BoundingBox GetBoundingBox() const { return box; }
+	
 	[[nodiscard]] std::vector<Vertex> GetVertices() const { return meshVertices; }
 	[[nodiscard]] std::vector<GLuint> GetIndices() const { return indices; }
-	[[nodiscard]] std::vector<MeshData> GetMeshData() const { return meshData; }
+	[[nodiscard]] std::vector<Mesh> GetMeshData() const { return meshes; }
 
 private:
 	std::vector<glm::vec3> vertices = std::vector<glm::vec3>();
@@ -24,9 +23,8 @@ private:
 	std::vector<GLuint> normalIndices = std::vector<GLuint>();
 	std::vector<GLuint> uvIndices = std::vector<GLuint>();
 	std::vector<Vertex> meshVertices = std::vector<Vertex>();
-	std::vector<MeshData> meshData = std::vector<MeshData>();
+	std::vector<Mesh> meshes = std::vector<Mesh>();
 
-	//BoundingBox box{};
 	GLuint currentTexture = 0;
 
 	void PostProcessing();

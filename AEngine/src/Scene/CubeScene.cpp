@@ -249,9 +249,9 @@ bool CubeScene::Initialize()
 	//Adding Components To Cube Object
 	cubeEntityPtr->AddComponent<Transform>();
 	cubeEntityPtr->AddComponent<Shader>("cubeTextureShader", "vertTextureCubeShader.glsl", "fragTextureCubeShader.glsl");
-	cubeEntityPtr->AddComponent<MeshFilter>();
-	cubeEntityPtr->AddComponent<MeshRenderer>(cameraEntityPtr, 
-											  GL_TRIANGLES);
+	//cubeEntityPtr->AddComponent<MeshFilter>();
+	//cubeEntityPtr->AddComponent<MeshRenderer>(cameraEntityPtr, 
+	//										  GL_TRIANGLES);
 	return true;
 }
 

@@ -13,7 +13,7 @@ public:
 	
 	void UseProgram() const { glUseProgram(programId); }
 
-	const GLuint GetShaderProgram() const { return programId; }
+	GLuint GetShaderProgram() const { return programId; }
 	
 private:
 	static GLuint CreateShader(const GLenum, std::string&, const char*);

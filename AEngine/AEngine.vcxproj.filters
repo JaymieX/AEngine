@@ -82,6 +82,9 @@
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Physics\BoundingBox.h" />
+    <ClInclude Include="src\Rendering\SceneGraph.h" />
+    <ClInclude Include="src\Resources\ResourceManager.h" />
+    <ClInclude Include="src\Graphics\Model.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\AEApplication.cpp">
@@ -100,9 +103,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Camera.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Mesh.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\ObjLoader.cpp">
@@ -126,5 +126,8 @@
     <ClCompile Include="src\Events\MouseEvent.cpp">
       <Filter>Events</Filter>
     </ClCompile>
+    <ClCompile Include="src\Rendering\SceneGraph.cpp" />
+    <ClCompile Include="src\Resources\ResourceManager.cpp" />
+    <ClCompile Include="src\Graphics\Model.cpp" />
   </ItemGroup>
 </Project>

@@ -54,7 +54,7 @@ GLuint Shader::CreateShader(const GLenum shaderType, std::string& shaderSource, 
 
 	if(!compileResult)
 	{
-		GLint logLength = 0;
+		auto logLength = 0;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
 		std::vector<char> shaderLog(logLength);
 		glGetShaderInfoLog(shader, logLength, nullptr, &shaderLog[0]);

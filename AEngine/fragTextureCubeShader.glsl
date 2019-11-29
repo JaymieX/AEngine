@@ -1,10 +1,9 @@
 #version 410 core
+out vec4 fragColor;
 
 in vec2 vertexUV;
 in vec3 vertexNormal;
 in vec3 fragPosition;
-
-out vec4 fragColor;
 
 uniform sampler2D inputTexture;
 uniform vec3 cameraPos;

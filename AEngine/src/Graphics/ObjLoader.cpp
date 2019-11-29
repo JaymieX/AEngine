@@ -12,7 +12,7 @@ ObjLoader::~ObjLoader()
 	normalIndices.clear();
 	uvIndices.clear();
 	meshVertices.clear();
-	meshData.clear();
+	meshes.clear();
 }
 
 void ObjLoader::LoadMeshData(const std::string& fileName)
@@ -88,18 +88,18 @@ void ObjLoader::LoadMeshData(const std::string& fileName, const std::string& mat
 
 void ObjLoader::PostProcessing()
 {
-	for (int i = 0; i < indices.size(); i++) {
+	for (auto i = 0; i < indices.size(); i++) {
 		Vertex vert{};
 		vert.position = vertices[indices[i] - 1]; std::cout << i << ":" << glm::to_string(vert.position) << std::endl;
 		vert.normal = normals[normalIndices[i] - 1];
 		vert.uvCoords = uvCoords[uvIndices[i] - 1];
 		meshVertices.push_back(vert);
 	}
-	MeshData mesh;
+	Mesh mesh;
 	mesh.vertices = meshVertices;
 	mesh.indices = indices;
 	mesh.textureId = currentTexture;
-	meshData.push_back(mesh);
+	meshes.push_back(mesh);
 
 	indices.clear();
 	normalIndices.clear();

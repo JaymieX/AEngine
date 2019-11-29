@@ -4,16 +4,18 @@
 #include "Systems/EntityComponent.h"
 
 class Transform final : public Component
-{
+{	
 public:
 	Transform() : position(glm::vec3(0)),
 	              angleAxis(glm::vec3(0.0f, 1.0f, 0.0f)),
 	              eulerAngles(glm::vec3(0)), scale(glm::vec3(1.0f)) {}
 
-	explicit Transform(const glm::vec3 position) : position(position),
-	                                               angleAxis(glm::vec3(0.0f, 1.0f, 0.0f)),
-	                                               eulerAngles(glm::vec3(0)),
-												   scale(glm::vec3(1.0f)) {}
+	explicit Transform(glm::vec3 position, 
+					   glm::vec3 scale = glm::vec3(1.0f), 
+					   glm::quat rotation = glm::quat(glm::vec4(0.f))) :
+					   rotation(rotation), position(position), angleAxis(glm::vec3(0.0f, 1.0f, 0.0f)),
+					   eulerAngles(glm::vec3(0)), scale(scale) {}
+
 
 	[[nodiscard]] glm::vec3 GetEuler() const { return eulerAngles; }
 	

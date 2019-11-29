@@ -4,24 +4,28 @@
 
 class Component;
 class Entity;
+class EntityManager;
 
 using ComponentTypeID = std::size_t;
+using EntityGroup = std::size_t;
 
-inline ComponentTypeID getComponentTypeID()
+inline ComponentTypeID getNewComponentTypeID()
 {
-	static ComponentTypeID id = 0;
+	static ComponentTypeID id = 0u;
 	return id++;
 }
 
 template <typename T> inline ComponentTypeID getComponentTypeID() noexcept
 {
-	static ComponentTypeID typeID = getComponentTypeID();
+	static ComponentTypeID typeID = getNewComponentTypeID();
 	return typeID;
 }
 
 constexpr std::size_t maxComponents = 64;
+constexpr std::size_t maxGroups = 32;
 
 using ComponentBitset = std::bitset<maxComponents>;
+using GroupBitset = std::bitset<maxGroups>;
 using ComponentArray = std::array<Component*, maxComponents>;
 
 class Component
@@ -40,15 +44,22 @@ public:
 
 class Entity
 {
-public:	
+public:
 	Entity() = default;
-	
-	Entity(Entity&& entity) noexcept :
-		components(std::move(entity.components)),
-		children(std::move(entity.children)),
-		componentArray(entity.componentArray),
-		componentBitset(entity.componentBitset),
-		active(entity.active) { }
+
+	explicit Entity(EntityManager& manager) : manager(manager) { }
+
+	/*Entity(const Entity& entity) noexcept : manager(),
+											componentArray(entity.componentArray),
+											componentBitset(entity.componentBitset),
+											active(entity.active)
+	{
+		for (const auto& comp : entity.components)
+			components.push_back(std::make_unique<Component>(*comp));
+
+		for (const auto& e : entity.children)
+			children.push_back(new Entity(*e));
+	}*/
 
 	void Update()
 	{
@@ -65,9 +76,21 @@ public:
 		for (auto& c : components) c->ResizeUpdate();
 	}
 
-	void Destroy() { active = false; for(auto child : children) child->active = false; }
+	void Destroy() { active = false; for (auto child : children) child->active = false; }
 
 	[[nodiscard]] bool isActive() const { return active; }
+
+	bool hasGroup(EntityGroup group)
+	{
+		return groupBitset[group];
+	}
+
+	void addGroup(EntityGroup group);
+
+	void removeGroup(EntityGroup group)
+	{
+		groupBitset[group] = false;
+	}
 
 	template <typename T>
 	[[nodiscard]] bool hasComponent() const
@@ -110,8 +133,13 @@ public:
 private:
 	std::vector<std::unique_ptr<Component>> components;
 	std::vector<Entity*> children;
-	ComponentArray componentArray;
+
+	EntityManager& manager;
+
+	GroupBitset groupBitset;
+	ComponentArray componentArray = ComponentArray();
 	ComponentBitset componentBitset;
+
 	bool active = true;
 };
 
@@ -120,10 +148,10 @@ class EntityManager
 public:
 	EntityManager() = default;
 
-	~EntityManager() 
+	~EntityManager()
 	{
-	   for (auto& entity : entities) entity->Destroy();
-	   SeekAndDestroy();
+		for (auto& entity : entities) entity->Destroy();
+		SeekAndDestroy();
 	}
 
 	void Update()
@@ -141,8 +169,28 @@ public:
 		for (auto& entity : entities) entity->ResizeUpdate();
 	}
 
+	void AddToGroup(Entity* entity, EntityGroup group)
+	{
+		groupedEntities[group].emplace_back(entity);
+	}
+
+	std::vector<Entity*> & getGroup(EntityGroup group)
+	{
+		return groupedEntities[group];
+	}
+
 	void SeekAndDestroy()
 	{
+		for (auto i(0u); i < maxGroups; i++)
+		{
+			auto& v(groupedEntities[i]);
+			v.erase(
+				std::remove_if(std::begin(v), std::end(v), [i](Entity* entity)
+					{
+						return !entity->isActive() || entity->hasGroup(i);
+					}), std::end(v));
+		}
+
 		entities.erase(std::remove_if(std::begin(entities), std::end(entities),
 			[](const std::unique_ptr<Entity>& entity)
 			{
@@ -151,9 +199,17 @@ public:
 		), std::end(entities));
 	}
 
+	//friend Entity;
+	//Entity* CreateAndAddEntity(Entity* otherEntity)
+	//{
+	//	std::unique_ptr<Entity> entityPtr = std::make_unique<Entity>(*otherEntity);
+	//	entities.emplace_back(std::move(entityPtr));
+	//	return entities.at((entities.size() - 1)).get();
+	//}
+
 	Entity* CreateAndAddEntity()
 	{
-		std::unique_ptr<Entity> entityPtr = std::make_unique<Entity>();
+		std::unique_ptr<Entity> entityPtr = std::make_unique<Entity>(*this);
 		entities.emplace_back(std::move(entityPtr));
 		return entities.at(entities.size() - 1).get();
 	}
@@ -161,7 +217,7 @@ public:
 	template <typename ...T, typename ...TArgs>
 	Entity* CreateAndAddEntity(TArgs&& ...componentArgs)
 	{
-		std::unique_ptr<Entity> entityPtr = std::make_unique<Entity>();
+		std::unique_ptr<Entity> entityPtr = std::make_unique<Entity>(*this);
 		entityPtr->AddComponent<T>(componentArgs);
 		entities.emplace_back(std::move(entityPtr));
 		return entities.at(entities.size() - 1).get();
@@ -169,5 +225,6 @@ public:
 
 private:
 	std::vector<std::unique_ptr<Entity>> entities;
+	std::array<std::vector<Entity*>, maxGroups> groupedEntities;
 };
 

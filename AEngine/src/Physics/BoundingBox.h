@@ -2,6 +2,8 @@
 
 #include <Systems/EntityComponent.h>
 #include "Graphics/Mesh.h"
+#include "Graphics/Model.h"
+#include "Components/Transform.h"
 
 constexpr void LimitScale(glm::vec3& v)
 {
@@ -18,7 +20,7 @@ struct BoundingBox : Component
 	{
 		transformPtr = boundEntity->GetComponent<Transform>();
 		
-		auto meshes = boundEntity->GetComponent<MeshFilter>()->meshPtr->meshes;
+		auto meshes = boundEntity->GetComponent<Model>()->GetMeshes();
 		for(const auto& mesh : meshes)
 		{
 			for(auto vertex : mesh.vertices)

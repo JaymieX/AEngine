@@ -10,7 +10,7 @@ std::map<std::string, TextureHandler::Texture*> TextureHandler::textures = std::
 
 TextureHandler::~TextureHandler()
 {
-	//GetInstance()->textures.clear();
+	textures.clear();
 }
 
 TextureHandler* TextureHandler::GetInstance()
