@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Scene/IScene.h"
-#include "Graphics/Mesh.h"
+#include "Rendering/GameObject.h"
 
-class ModelScene : public IScene
+class SceneGraph;
+
+class ModelScene final : public IScene
 {
 public: 
 	virtual bool Initialize() override;
@@ -11,8 +13,9 @@ public:
 	virtual void Render() const override;
 	virtual void ResizeUpdate() const override;
 
+	void HandleMouseReleasedEvent(int);
+
 private:
-	Entity* modelEntityPtr = nullptr;
 	Entity* cameraEntityPtr = nullptr;
 	Entity* lightEntityPtr = nullptr;
 };

@@ -1,31 +1,29 @@
 #pragma once
-#include "Systems/EntityComponent.h"
+
 #include "Mesh.h"
+class Camera;
 
 struct ModelData
 {
-	const char* shaderName;
-	const char* vertShaderPath;
-	const char* fragShaderPath;
-	std::string objPath;
-	std::string materialPath;
-	Entity* cameraEntity;
-	glm::vec3 position = glm::vec3(0.0f);
-	glm::vec3 scale = glm::vec3(1.0f);
-	glm::quat rotation = glm::quat(glm::vec4(0.0f));
+	class Entity* camera = nullptr;
+	GLuint shaderProgram = 0;
+	std::string objPath = std::string();
+	std::string materialPath = std::string();
 };
 
-class Model final : public Component
+class Model
 {
 public:
-	explicit Model(ModelData&);
+	explicit Model(const ModelData&);
+	explicit Model(ModelData&&);
 	~Model();
 
-	void Start() override;
-	void Render() override;
+	void Render();
 	void Render(size_t index);
 
 	[[nodiscard]] std::vector<Mesh> GetMeshes() const { return meshes; }
+	[[nodiscard]] GLuint GetShaderProgram() const  { return modelData.shaderProgram; }
+	void SetModelMatrix(const glm::mat4 modelMatrix){ this->modelMatrix = modelMatrix; }
 private:
 	ModelData modelData;
 	std::vector<MeshRenderData> renderMeshData;
@@ -35,8 +33,8 @@ private:
 	void BindVertexBuffers();
 	void SetUniformData(size_t index);
 	
-	class Transform* transformPtr = nullptr;
 	class ObjLoader* objLoader = nullptr;
+	glm::mat4 modelMatrix;
 };
 
 

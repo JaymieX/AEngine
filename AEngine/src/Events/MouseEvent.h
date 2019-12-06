@@ -39,6 +39,7 @@ struct MouseEventDispatcher
 	Event<int> mouseButtonReleasedEvent;
 	Event<double> mouseScrollEvent;
 	Event<float> mousePollUpdateEvent;
+	
 private:
 	static std::unique_ptr<MouseEventDispatcher> dispatcher;
 	MouseEventListener mouseEventListener;

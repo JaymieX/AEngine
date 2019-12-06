@@ -1,26 +1,23 @@
 #pragma once
 
-#include "Systems/EntityComponent.h"
-
-class Shader : public Component
+class ShaderHandler
 {
 public:
-	Shader() = default;
-	Shader(const char*, const char*, const char*);
-   ~Shader();
-	
-	void Start() override;
-	
-	void UseProgram() const { glUseProgram(programId); }
+	ShaderHandler(const ShaderHandler&) = delete;
+	ShaderHandler(ShaderHandler&&) = delete;
+	ShaderHandler& operator=(const ShaderHandler&) = delete;
+	ShaderHandler& operator=(ShaderHandler&&) = delete;
 
-	GLuint GetShaderProgram() const { return programId; }
+	static ShaderHandler* GetInstance();
+	GLuint GetShaderProgram(const char*);
+	void CreateProgram(const char*, const char*, const char*);
 	
 private:
-	static GLuint CreateShader(const GLenum, std::string&, const char*);
-	
-	const char* shaderName; 
-	const char* vertFilePath;
-	const char* fragFilePath; 
+	ShaderHandler() = default;
+   ~ShaderHandler();
 
-	GLuint programId;
+	static std::unique_ptr<ShaderHandler> instance;
+	friend std::default_delete<ShaderHandler>;
+	static std::map<const char*, GLuint> programs;
+	static GLuint CreateShader(GLenum, std::string&, const char*);
 };

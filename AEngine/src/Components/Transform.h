@@ -3,6 +3,13 @@
 #include <Core/AEpch.h>
 #include "Systems/EntityComponent.h"
 
+struct TransformData
+{
+	glm::vec3 position = glm::vec3(0.0f);
+	glm::vec3 scale = glm::vec3(1.0f);
+	glm::quat rotation = glm::quat(glm::vec4(0.0f));
+};
+
 class Transform final : public Component
 {	
 public:
@@ -12,9 +19,17 @@ public:
 
 	explicit Transform(glm::vec3 position, 
 					   glm::vec3 scale = glm::vec3(1.0f), 
-					   glm::quat rotation = glm::quat(glm::vec4(0.f))) :
+					   glm::quat rotation = glm::quat(glm::vec4(0.0f))) :
 					   rotation(rotation), position(position), angleAxis(glm::vec3(0.0f, 1.0f, 0.0f)),
 					   eulerAngles(glm::vec3(0)), scale(scale) {}
+
+	explicit Transform(const TransformData& data) : rotation(data.rotation), position(data.position), 
+													angleAxis(glm::vec3(0.0f, 1.0f, 0.0f)), eulerAngles(glm::vec3(0.0f)),
+													scale(data.scale) {}
+
+	explicit Transform(TransformData&& data) : rotation(data.rotation), position(data.position), 
+											   angleAxis(glm::vec3(0.0f, 1.0f, 0.0f)), eulerAngles(glm::vec3(0.0f)),
+											   scale(data.scale) {}
 
 
 	[[nodiscard]] glm::vec3 GetEuler() const { return eulerAngles; }
@@ -35,6 +50,9 @@ public:
 		matrix = GetTranslationMatrix(matrix);
 		return matrix;
 	}
+
+	void Start() override { ConvertRotation(); }
+	void Update(const float dt) override { ConvertRotation(); }  
 	
 	float angle = 0;
 	glm::quat rotation = glm::quat(glm::vec4(0.0f));
@@ -42,7 +60,6 @@ public:
 	glm::vec3 angleAxis;
 	glm::vec3 eulerAngles;
 	glm::vec3 scale;
-
 private:
 	[[nodiscard]] glm::mat4 GetTranslationMatrix(const glm::mat4 mat) const
 	{
@@ -59,7 +76,5 @@ private:
 		return glm::scale(mat, scale);
 	}
 
-	void Start() override { ConvertRotation(); }
-	void Update() override { ConvertRotation(); }
 	void ConvertRotation() { eulerAngles = glm::eulerAngles(rotation); }
 };

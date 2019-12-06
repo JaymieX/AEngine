@@ -35,7 +35,7 @@ public:
 	virtual ~Component() = default;
 
 	virtual void Start() {}
-	virtual void Update() {}
+	virtual void Update(const float dt) {}
 	virtual void Render() {}
 	virtual void ResizeUpdate() {}
 
@@ -45,25 +45,12 @@ public:
 class Entity
 {
 public:
-	Entity() = default;
-
+	Entity() = delete;
 	explicit Entity(EntityManager& manager) : manager(manager) { }
 
-	/*Entity(const Entity& entity) noexcept : manager(),
-											componentArray(entity.componentArray),
-											componentBitset(entity.componentBitset),
-											active(entity.active)
+	void Update(const float dt)
 	{
-		for (const auto& comp : entity.components)
-			components.push_back(std::make_unique<Component>(*comp));
-
-		for (const auto& e : entity.children)
-			children.push_back(new Entity(*e));
-	}*/
-
-	void Update()
-	{
-		for (auto& c : components) c->Update();
+		for (auto& c: components) c->Update(dt);
 	}
 
 	void Render()
@@ -76,7 +63,7 @@ public:
 		for (auto& c : components) c->ResizeUpdate();
 	}
 
-	void Destroy() { active = false; for (auto child : children) child->active = false; }
+	void Destroy() { active = false; }
 
 	[[nodiscard]] bool isActive() const { return active; }
 
@@ -115,15 +102,6 @@ public:
 		return static_cast<T*>(c);
 	}
 
-	void AddEntity(Entity* childEntity)
-	{
-		children.emplace_back(childEntity);
-	}
-
-	Entity* GetChild(const int index) { return children[index]; }
-
-	std::vector<Entity*> GetChildren() const { return children; }
-
 	template<typename T> T* GetComponent() const
 	{
 		auto componentPtr(componentArray[getComponentTypeID<T>()]);
@@ -132,7 +110,6 @@ public:
 
 private:
 	std::vector<std::unique_ptr<Component>> components;
-	std::vector<Entity*> children;
 
 	EntityManager& manager;
 
@@ -154,9 +131,9 @@ public:
 		SeekAndDestroy();
 	}
 
-	void Update()
+	void Update(const float dt)
 	{
-		for (auto& entity : entities) entity->Update();
+		for (auto& entity : entities) entity->Update(dt);
 	}
 
 	void Render()
@@ -198,14 +175,6 @@ public:
 			}
 		), std::end(entities));
 	}
-
-	//friend Entity;
-	//Entity* CreateAndAddEntity(Entity* otherEntity)
-	//{
-	//	std::unique_ptr<Entity> entityPtr = std::make_unique<Entity>(*otherEntity);
-	//	entities.emplace_back(std::move(entityPtr));
-	//	return entities.at((entities.size() - 1)).get();
-	//}
 
 	Entity* CreateAndAddEntity()
 	{

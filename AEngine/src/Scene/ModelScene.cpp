@@ -1,21 +1,20 @@
 #include <Core/AEpch.h>
 #include "Scene/ModelScene.h"
-#include "Graphics/Mesh.h"
-#include "Graphics/Shader.h"
 #include "Graphics/Camera.h"
 #include "Components/Transform.h"
 #include "Graphics/Light.h"
 #include "Events/MouseEvent.h"
 #include "Physics/BoundingBox.h"
+#include "Graphics/Shader.h"
+#include "Rendering/SceneGraph.h"
+#include "Physics/CollisionHandler.h"
 
 bool ModelScene::Initialize()
 {
-	static const float DISTANCE_TO_MODEL = 5.0f;
+	static const auto DISTANCE_TO_MODEL = 5.0f;
 	MouseEventListener::scrollPosition = DISTANCE_TO_MODEL;
 	
 	sceneEntityManagerPtr = std::make_unique<EntityManager>();
-	
-	modelEntityPtr = sceneEntityManagerPtr->CreateAndAddEntity();
 	cameraEntityPtr = sceneEntityManagerPtr->CreateAndAddEntity();
 	lightEntityPtr = sceneEntityManagerPtr->CreateAndAddEntity();
 
@@ -24,52 +23,61 @@ bool ModelScene::Initialize()
 	lightEntityPtr->AddComponent<Light>(0.5f, 0.5f, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	//Adding Components To Camera Object
-	cameraEntityPtr->AddComponent<Transform>(glm::vec3(0.0f, 100.0f, DISTANCE_TO_MODEL));
+	cameraEntityPtr->AddComponent<Transform>(glm::vec3(0.0f));
 	cameraEntityPtr->AddComponent<Camera>(45.0f, glm::vec2(0.2f, 50.0f), false)->AddLight(lightEntityPtr);
+
+	const ModelData appleModelData { cameraEntityPtr, ShaderHandler::GetInstance()->GetShaderProgram("TextureShader"), "src/Resources/Models/Apple.obj", "src/Resources/Models/Apple.mtl" };
+	const auto appleModelPtr = new Model(appleModelData);
+	const ModelData diceModelData { cameraEntityPtr, ShaderHandler::GetInstance()->GetShaderProgram("TextureShader"), "src/Resources/Models/Dice.obj", "src/Resources/Models/Dice.mtl" };
+	const auto diceModelPtr = new Model(diceModelData);
 	
-	//Adding Model Component;
-	ModelData model = {"cubeTextureShader", "vertTextureCubeShader.glsl", "fragTextureCubeShader.glsl"};
-	model.objPath = std::string("src/Resources/Models/Apple.obj");
-	model.cameraEntity = cameraEntityPtr;
-	modelEntityPtr->AddComponent<Model>(model);
+	CollisionHandling::GetInstance()->CreateHandler(cameraEntityPtr->GetComponent<Camera>());
+
+	SceneGraph::GetInstance()->AddModel(appleModelPtr);
+	SceneGraph::GetInstance()->AddModel(diceModelPtr);
+	SceneGraph::GetInstance()->AddGameObject(new GameObject(sceneEntityManagerPtr.get(), TransformData{glm::vec3(2.0f, 0.0f, 2.0f)}, appleModelPtr), "Apple");
+	SceneGraph::GetInstance()->AddGameObject(new GameObject(sceneEntityManagerPtr.get(), TransformData{glm::vec3(-2.0f, 0.0f, 2.0f)}, diceModelPtr), "Dice");
+
+	MouseEventDispatcher::GetDispatcher()->mouseButtonReleasedEvent.Subscribe<ModelScene>(this, &ModelScene::HandleMouseReleasedEvent);
 	
 	return true;
 }
 
 void ModelScene::Update(const float dt)
 {
-	MouseEventDispatcher::GetDispatcher()->MousePollUpdate(dt);
+	SceneGraph::GetInstance()->Update(dt);
 	
-	sceneEntityManagerPtr->Update();
-	sceneEntityManagerPtr->SeekAndDestroy();
-
+	cameraEntityPtr->Update(dt);
+	
+	MouseEventDispatcher::GetDispatcher()->MousePollUpdate(dt);
 	auto cameraTransform = cameraEntityPtr->GetComponent<Transform>();
 	cameraTransform->position = glm::vec3(0,0, MouseEventListener::scrollPosition);
 
 	static auto cameraXPos = 0.0f;
 	static auto cameraYPos = 0.0f;
+	
 	cameraXPos += MouseEventListener::offsetMousePosition.x * 0.001f;
 	cameraYPos += MouseEventListener::offsetMousePosition.y * 0.001f;
 
-	std::cout << "Camera Rotation: [" << cameraXPos << ", " << cameraYPos << "]" << std::endl;
+	//std::cout << "Camera Position: " << glm::to_string(cameraTransform->position) << std::endl;
+	//std::cout << "Camera Rotation: [" << cameraXPos << ", " << cameraYPos << "]" << std::endl;
 
 	cameraTransform->position.y = -2.0f;
 	cameraTransform->rotation = glm::quat(glm::vec3(cameraYPos, cameraXPos, 0));
-
-	static auto angle = 0.0f;
-	modelEntityPtr->GetComponent<Transform>()->position.z = -10.0f;
-	modelEntityPtr->GetComponent<Transform>()->rotation = glm::quat(glm::vec3(0.0f, glm::radians(++angle), 0.0f));
-	//modelEntityPtr->GetComponent<Transform>()->scale += glm::vec3(0.001f, -0.001f, 0.001f); 
-	//modelEntityPtr->GetComponent<BoundingBox>()->PrintT();
 }
 
 void ModelScene::Render() const
 {
-	sceneEntityManagerPtr->Render();
+	SceneGraph::GetInstance()->Render();
 }
 
 void ModelScene::ResizeUpdate() const
 {
 	sceneEntityManagerPtr->ResizeUpdate();
+}
+
+void ModelScene::HandleMouseReleasedEvent(const int button)
+{
+	CollisionHandling::GetInstance()->Update(MouseEventListener::mousePosition, button);
 }
 

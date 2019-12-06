@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/AEpch.h>
+#include "MaterialHandler.h"
 
 struct Vertex {
 	glm::vec3 position;
@@ -12,7 +13,7 @@ struct Mesh
 {
 	std::vector<Vertex> vertices = std::vector<Vertex>();
 	std::vector<GLuint> indices = std::vector<GLuint>();
-	GLuint textureId = 0;
+	MaterialHandler::Material material;
 };
 
 struct MeshRenderData

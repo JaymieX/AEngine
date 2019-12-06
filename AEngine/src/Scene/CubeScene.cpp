@@ -1,7 +1,6 @@
 #include <Core/AEpch.h>
 #include "CubeScene.h"
 #include "Graphics/Mesh.h"
-#include "Graphics/Shader.h"
 #include "Graphics/Camera.h"
 #include "Graphics/TextureHandler.h"
 #include "Components/Transform.h"
@@ -248,7 +247,7 @@ bool CubeScene::Initialize()
 	
 	//Adding Components To Cube Object
 	cubeEntityPtr->AddComponent<Transform>();
-	cubeEntityPtr->AddComponent<Shader>("cubeTextureShader", "vertTextureCubeShader.glsl", "fragTextureCubeShader.glsl");
+	//cubeEntityPtr->AddComponent<Shader>("cubeTextureShader", "vertTextureCubeShader.glsl", "fragTextureCubeShader.glsl");
 	//cubeEntityPtr->AddComponent<MeshFilter>();
 	//cubeEntityPtr->AddComponent<MeshRenderer>(cameraEntityPtr, 
 	//										  GL_TRIANGLES);
@@ -258,8 +257,7 @@ bool CubeScene::Initialize()
 void CubeScene::Update(const float dt)
 {
 	cubeEntityPtr->GetComponent<Transform>()->angle += 1.0f;
-	
-	sceneEntityManagerPtr->Update();
+	sceneEntityManagerPtr->Update(dt);
 	sceneEntityManagerPtr->SeekAndDestroy();
 }
 

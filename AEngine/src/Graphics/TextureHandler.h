@@ -1,18 +1,16 @@
 #pragma once
 
-#include <Core/AEpch.h>
+struct Texture
+{
+	GLuint textureId = 0;
+	int width = 0;
+	int height = 0;
+	int colorChannels = 0;
+};
 
 class TextureHandler
 {
 public:
-	struct Texture 
-	{
-		GLuint textureId = 0;
-		int width = 0;
-		int height = 0;
-		int colorChannels = 0;
-	};
-
 	TextureHandler(const TextureHandler&) = delete;
 	TextureHandler(TextureHandler&&) = delete;
 	TextureHandler& operator=(const TextureHandler&) = delete;
@@ -20,25 +18,26 @@ public:
 
 	static TextureHandler* GetInstance();
 
-	[[nodiscard]] inline GLuint GetTextureId(std::string textureName)
+	[[nodiscard]] static GLuint GetTextureId(const std::string& textureName)
 	{
-		const auto textureIter = textures.find(textureName);
-		if(textureIter == textures.end()) return 0;
-		return textureIter->second->textureId;
+		const auto textureIt = textures.find(textureName);
+		if (textureIt == textures.end()) return 0;
+		return textureIt->second->textureId;
 	}
 
-	[[nodiscard]] inline Texture* GetTexture(std::string textureName)
+	/*[[nodiscard]] inline Texture* GetTexture(const std::string& textureName)
 	{
 		return textures.find(textureName)->second;
-	}
+	}*/
 
-	void CreateTexture(const std::string& textureName, const std::string& path);
+	static void CreateTexture(const std::string& textureName, const std::string& path);
 
 private:
 	TextureHandler() = default;
-	~TextureHandler();
+   ~TextureHandler();
 
+	static std::map<std::string, std::unique_ptr<Texture>> textures;
+	
 	static std::unique_ptr<TextureHandler> instance;
-	static std::map<std::string, Texture*> textures;
 	friend std::default_delete<TextureHandler>;
 };

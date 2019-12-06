@@ -13,6 +13,15 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{1653CE33-0220-293F-2B39-17E717655ECD}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{888B590D-F46A-D8A8-FD82-637F69E13E0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{E3AE1F7C-4F19-D4F2-9857-85980401B247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{000BCD17-6C75-818E-B5B3-3234215D5FE3}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{B3F7140E-1F0C-3DBF-E88D-E01E546139F0}</UniqueIdentifier>
     </Filter>
@@ -45,6 +54,9 @@
     <ClInclude Include="src\Events\IEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Events\MouseEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\Camera.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -52,6 +64,9 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Mesh.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Model.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\ObjLoader.h">
@@ -62,6 +77,18 @@
     </ClInclude>
     <ClInclude Include="src\Graphics\TextureHandler.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\BoundingBox.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\GameObject.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\SceneGraph.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\ResourceManager.h">
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\CubeScene.h">
       <Filter>Scene</Filter>
@@ -78,13 +105,11 @@
     <ClInclude Include="src\Window\Window.h">
       <Filter>Window</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\MouseEvent.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\BoundingBox.h" />
-    <ClInclude Include="src\Rendering\SceneGraph.h" />
-    <ClInclude Include="src\Resources\ResourceManager.h" />
-    <ClInclude Include="src\Graphics\Model.h" />
+    <ClInclude Include="src\Graphics\MaterialHandler.h" />
+    <ClInclude Include="src\Graphics\MaterialLoader.h" />
+    <ClInclude Include="src\Physics\Ray.h" />
+    <ClInclude Include="src\Physics\CollisionDetection.h" />
+    <ClInclude Include="src\Physics\CollisionHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\AEApplication.cpp">
@@ -102,7 +127,13 @@
     <ClCompile Include="src\Core\main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Events\MouseEvent.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
     <ClCompile Include="src\Graphics\Camera.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Model.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\ObjLoader.cpp">
@@ -114,6 +145,15 @@
     <ClCompile Include="src\Graphics\TextureHandler.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Rendering\GameObject.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\SceneGraph.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\ResourceManager.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\CubeScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -123,11 +163,12 @@
     <ClCompile Include="src\Window\Window.cpp">
       <Filter>Window</Filter>
     </ClCompile>
-    <ClCompile Include="src\Events\MouseEvent.cpp">
-      <Filter>Events</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\SceneGraph.cpp" />
-    <ClCompile Include="src\Resources\ResourceManager.cpp" />
-    <ClCompile Include="src\Graphics\Model.cpp" />
+    <ClCompile Include="src\Graphics\MaterialHandler.cpp" />
+    <ClCompile Include="src\Graphics\MaterialLoader.cpp" />
+    <ClCompile Include="src\Physics\CollisionDetection.cpp" />
+    <ClCompile Include="src\Physics\CollisionHandler.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\Physics\vertLineShader.txt" />
   </ItemGroup>
 </Project>

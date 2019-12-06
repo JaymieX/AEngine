@@ -107,12 +107,18 @@
     <ClInclude Include="src\Events\MouseEvent.h" />
     <ClInclude Include="src\Graphics\Camera.h" />
     <ClInclude Include="src\Graphics\Light.h" />
+    <ClInclude Include="src\Graphics\MaterialHandler.h" />
+    <ClInclude Include="src\Graphics\MaterialLoader.h" />
     <ClInclude Include="src\Graphics\Mesh.h" />
     <ClInclude Include="src\Graphics\Model.h" />
     <ClInclude Include="src\Graphics\ObjLoader.h" />
     <ClInclude Include="src\Graphics\Shader.h" />
     <ClInclude Include="src\Graphics\TextureHandler.h" />
     <ClInclude Include="src\Physics\BoundingBox.h" />
+    <ClInclude Include="src\Physics\CollisionDetection.h" />
+    <ClInclude Include="src\Physics\CollisionHandler.h" />
+    <ClInclude Include="src\Physics\Ray.h" />
+    <ClInclude Include="src\Rendering\GameObject.h" />
     <ClInclude Include="src\Rendering\SceneGraph.h" />
     <ClInclude Include="src\Resources\ResourceManager.h" />
     <ClInclude Include="src\Scene\CubeScene.h" />
@@ -131,10 +137,15 @@
     <ClCompile Include="src\Core\main.cpp" />
     <ClCompile Include="src\Events\MouseEvent.cpp" />
     <ClCompile Include="src\Graphics\Camera.cpp" />
+    <ClCompile Include="src\Graphics\MaterialHandler.cpp" />
+    <ClCompile Include="src\Graphics\MaterialLoader.cpp" />
     <ClCompile Include="src\Graphics\Model.cpp" />
     <ClCompile Include="src\Graphics\ObjLoader.cpp" />
     <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\TextureHandler.cpp" />
+    <ClCompile Include="src\Physics\CollisionDetection.cpp" />
+    <ClCompile Include="src\Physics\CollisionHandler.cpp" />
+    <ClCompile Include="src\Rendering\GameObject.cpp" />
     <ClCompile Include="src\Rendering\SceneGraph.cpp" />
     <ClCompile Include="src\Resources\ResourceManager.cpp" />
     <ClCompile Include="src\Scene\CubeScene.cpp" />
@@ -148,6 +159,9 @@
     <ProjectReference Include="external\glfw\glfw.vcxproj">
       <Project>{9563977C-819A-980D-2A87-7E10169D140F}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\Physics\vertLineShader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

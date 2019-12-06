@@ -8,7 +8,6 @@ struct Light final : Component
 																			 diffuse(diffuse),
 																			 color(color)
 																			 {}
-	
 	float ambient, diffuse;
 	glm::vec3 color;
 };

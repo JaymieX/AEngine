@@ -25,9 +25,9 @@ private:
 	std::vector<Vertex> meshVertices = std::vector<Vertex>();
 	std::vector<Mesh> meshes = std::vector<Mesh>();
 
-	GLuint currentTexture = 0;
+	MaterialHandler::Material currentMaterial;
 
 	void PostProcessing();
 	void LoadMaterial(const std::string& fileName);
-	void LoadMaterialLibrary(const std::string& matName);
+	void LoadMaterialLibrary(const std::string& matPath) const;
 };

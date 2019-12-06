@@ -1,17 +1,25 @@
 #include <Core/AEpch.h>
 #include "Model.h"
 #include "Mesh.h"
-#include "Shader.h"
-#include "Physics/BoundingBox.h"
 #include "ObjLoader.h"
 #include "Light.h"
 #include "Camera.h"
+#include "Systems/EntityComponent.h"
 
-Model::Model(ModelData& modelData) : modelData(modelData)
+Model::Model(const ModelData& modelData) : modelData(modelData)
 {
 	objLoader = new ObjLoader();
-	objLoader->LoadMeshData(modelData.objPath);
+	objLoader->LoadMeshData(modelData.objPath, modelData.materialPath);
 	meshes = objLoader->GetMeshData();
+	GenBuffers();
+}
+
+Model::Model(ModelData&& modelData) : modelData(modelData)
+{
+	objLoader = new ObjLoader();
+	objLoader->LoadMeshData(modelData.objPath, modelData.materialPath);
+	meshes = objLoader->GetMeshData();
+	GenBuffers();
 }
 
 Model::~Model()
@@ -23,14 +31,6 @@ Model::~Model()
 		glDeleteBuffers(1, &renderData.vbo);
 		glDeleteVertexArrays(1, &renderData.vao);
 	}
-}
-
-void Model::Start()
-{
-	GenBuffers();
-	boundEntity->AddComponent<Transform>(modelData.position, modelData.scale, modelData.rotation);
-	boundEntity->AddComponent<Shader>(modelData.shaderName, modelData.vertShaderPath, modelData.fragShaderPath);
-	boundEntity->AddComponent<BoundingBox>();
 }
 
 void Model::Render()
@@ -103,20 +103,28 @@ void Model::BindVertexBuffers()
 void Model::SetUniformData(const size_t index)
 {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, meshes[index].textureId);
-	
+	glBindTexture(GL_TEXTURE_2D, meshes[index].material.diffuseMap);
+		
 	//Get ShaderProgramID
-	const auto shaderProgramId = boundEntity->GetComponent<Shader>()->GetShaderProgram();
-	glUseProgram(shaderProgramId);
+	glUseProgram(modelData.shaderProgram);
 
-	const auto cameraComponent = modelData.cameraEntity->GetComponent<Camera>();
+	const auto cameraComponent = modelData.camera->GetComponent<Camera>();
 	const auto lightComponent = cameraComponent->GetLights()[0]->GetComponent<Light>();
-	glUniform3fv(glGetUniformLocation(shaderProgramId, "cameraPos"), 1, glm::value_ptr(cameraComponent->GetPosition()));
-	glUniform3fv(glGetUniformLocation(shaderProgramId, "light.position"), 1, glm::value_ptr(cameraComponent->GetLights()[0]->GetComponent<Transform>()->position));
-	glUniform1f(glGetUniformLocation(shaderProgramId, "light.ambient"), lightComponent->ambient);
-	glUniform1f(glGetUniformLocation(shaderProgramId, "light.diffuse"), lightComponent->diffuse);
-	glUniform3fv(glGetUniformLocation(shaderProgramId, "light.color"), 1, glm::value_ptr(lightComponent->color));
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "view"), 1, GL_FALSE, glm::value_ptr(cameraComponent->GetViewMatrix()));
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "projection"), 1, GL_FALSE, glm::value_ptr(cameraComponent->GetPerspectiveMatrix()));
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgramId, "model"), 1, GL_FALSE, glm::value_ptr(boundEntity->GetComponent<Transform>()->GetTransformMatrix()));
+	
+	glUniform3fv(glGetUniformLocation(modelData.shaderProgram, "cameraPos"), 1, glm::value_ptr(cameraComponent->GetPosition()));
+	
+	glUniform3fv(glGetUniformLocation(modelData.shaderProgram, "light.position"), 1, glm::value_ptr(cameraComponent->GetLights()[0]->GetComponent<Transform>()->position));
+	glUniform1f(glGetUniformLocation(modelData.shaderProgram, "light.ambient"), lightComponent->ambient);
+	glUniform1f(glGetUniformLocation(modelData.shaderProgram, "light.diffuse"), lightComponent->diffuse);
+	glUniform3fv(glGetUniformLocation(modelData.shaderProgram, "light.color"), 1, glm::value_ptr(lightComponent->color));
+	
+	glUniform3fv(glGetUniformLocation(modelData.shaderProgram, "material.ambientColor"), 1, glm::value_ptr(meshes[index].material.ambientColor));
+	glUniform3fv(glGetUniformLocation(modelData.shaderProgram, "material.diffuseColor"), 1, glm::value_ptr(meshes[index].material.diffuseColor));
+	glUniform3fv(glGetUniformLocation(modelData.shaderProgram, "material.specularColor"), 1, glm::value_ptr(meshes[index].material.specularColor));
+	glUniform1f(glGetUniformLocation(modelData.shaderProgram, "material.roughness"), meshes[index].material.roughness);
+	glUniform1f(glGetUniformLocation(modelData.shaderProgram, "material.transparency"), meshes[index].material.transparency);
+	
+	glUniformMatrix4fv(glGetUniformLocation(modelData.shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(cameraComponent->GetViewMatrix()));
+	glUniformMatrix4fv(glGetUniformLocation(modelData.shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(cameraComponent->GetPerspectiveMatrix()));
+	glUniformMatrix4fv(glGetUniformLocation(modelData.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(modelMatrix));
 }

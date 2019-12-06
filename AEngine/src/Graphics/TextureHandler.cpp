@@ -6,16 +6,17 @@
 #include <stb_image.h>
 
 std::unique_ptr<TextureHandler> TextureHandler::instance(nullptr);
-std::map<std::string, TextureHandler::Texture*> TextureHandler::textures = std::map<std::string, Texture*>();
+std::map<std::string, std::unique_ptr<Texture>> TextureHandler::textures = std::map<std::string, std::unique_ptr<Texture>>();
 
 TextureHandler::~TextureHandler()
 {
-	textures.clear();
+	//if(!textures.empty() && textures.begin()->second != nullptr)
+	//	textures.clear();
 }
 
 TextureHandler* TextureHandler::GetInstance()
 {
-	if(!instance) instance = std::unique_ptr<TextureHandler>(new TextureHandler());
+	if (!instance) instance = std::unique_ptr<TextureHandler>(new TextureHandler());
 	return instance.get();
 }
 
@@ -24,7 +25,7 @@ void TextureHandler::CreateTexture(const std::string& textureName, const std::st
 	auto texture = new Texture();
 	auto data = stbi_load(path.c_str(), &texture->width, &texture->height, &texture->colorChannels, 0);
 
-	if(!data) 
+	if (!data)
 	{
 		LOG_ERROR("Failed to load texture: " + textureName, "TextureHandler.cpp", __LINE__);
 		return;
@@ -44,7 +45,8 @@ void TextureHandler::CreateTexture(const std::string& textureName, const std::st
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	textures[textureName] = texture;
+	if(textures.find(textureName) == textures.end())
+		textures.emplace(textureName, std::unique_ptr<Texture>(texture));
 	stbi_image_free(data);
-	data = nullptr; 
+	data = nullptr;
 }

@@ -2,7 +2,7 @@
 
 #include "Scene/IScene.h"
 
-class CubeScene : public IScene
+class CubeScene final : public IScene
 {
 public: 
 	virtual bool Initialize() override;

@@ -1,7 +1,7 @@
 #include <Core/AEpch.h>
 #include "ObjLoader.h"
 #include "Core/Logger.h"
-#include "TextureHandler.h"
+#include "MaterialLoader.h"
 
 ObjLoader::~ObjLoader()
 {
@@ -46,7 +46,7 @@ void ObjLoader::LoadMeshData(const std::string& fileName)
 			normals.push_back(normal);
 			//std::cout << "VN " << x << ", " << y << ", " << z << std::endl;
 		}
-		// TEXUTRE DATA
+		// TEXTURE DATA
 		if (line.substr(0, 2) == "vt") {
 			glm::vec2 textureCoord;
 			double x, y;
@@ -62,7 +62,7 @@ void ObjLoader::LoadMeshData(const std::string& fileName)
 			char s;
 			std::istringstream v(line.substr(2));
 			v >> x[0] >> s >> y[0] >> s >> z[0] >> x[1] >> s >> y[1] >> s >> z[1] >> x[2] >> s >> y[2] >> s >> z[2];
-			for (int i = 0; i < 3; i++) {
+			for (auto i = 0; i < 3; i++) {
 				indices.push_back(x[i]);
 				uvIndices.push_back(y[i]);
 				normalIndices.push_back(z[i]);
@@ -71,10 +71,10 @@ void ObjLoader::LoadMeshData(const std::string& fileName)
 
 		// NEW MATERIAL
 		else if (line.substr(0, 7) == "usemtl ") {
+			LoadMaterial(line.substr(7));
 			if (!indices.empty()) {
 				PostProcessing();
 			}
-			LoadMaterial(line.substr(7));
 		}
 	}
 	PostProcessing();
@@ -98,36 +98,22 @@ void ObjLoader::PostProcessing()
 	Mesh mesh;
 	mesh.vertices = meshVertices;
 	mesh.indices = indices;
-	mesh.textureId = currentTexture;
+	mesh.material = currentMaterial;
 	meshes.push_back(mesh);
 
 	indices.clear();
 	normalIndices.clear();
 	uvIndices.clear();
 
-	currentTexture = 0;
+	currentMaterial = MaterialHandler::Material();
 }
 
 void ObjLoader::LoadMaterial(const std::string& fileName)
 {
-	currentTexture = TextureHandler::GetInstance()->GetTextureId(fileName);
-	if (currentTexture == 0) {
-		TextureHandler::GetInstance()->CreateTexture(fileName, "src/Resources/Textures/" + fileName + ".jpg");
-		currentTexture = TextureHandler::GetInstance()->GetTextureId(fileName);
-	}
+	currentMaterial = MaterialHandler::GetInstance()->GetMaterial(fileName);
 }
 
-void ObjLoader::LoadMaterialLibrary(const std::string& matName)
+void ObjLoader::LoadMaterialLibrary(const std::string& matPath) const
 {
-	std::ifstream in(matName.c_str(), std::ios::in);
-	if (!in) {
-		LOG_ERROR("Could not open MTL file: " + matName, "ObjLoader.cpp", __LINE__);
-		return;
-	}
-	std::string line;
-	while (std::getline(in, line)) {
-		if (line.substr(0, 7) == "newmtl") {
-			LoadMaterial(line.substr(7));
-		}
-	}
+	MaterialLoader::LoadMaterial(matPath);
 }

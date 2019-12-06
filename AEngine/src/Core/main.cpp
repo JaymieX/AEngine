@@ -6,5 +6,6 @@ int main() {
 	if (AEApplication::GetInstance()->Initialize())
 		AEApplication::GetInstance()->Run();
 
-	return 0;
+	_CrtDumpMemoryLeaks();
+	exit(0);
 }

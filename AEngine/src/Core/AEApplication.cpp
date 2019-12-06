@@ -5,6 +5,7 @@
 #include "Scene/IScene.h"
 #include "Scene/ModelScene.h"
 #include "Events/MouseEvent.h"
+#include "Graphics/Shader.h"
 
 std::unique_ptr<AEApplication> AEApplication::instance(nullptr);
 
@@ -44,6 +45,10 @@ bool AEApplication::Initialize()
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, windowPtr->GetWidth(), windowPtr->GetHeight());
 
+	//Created Shader Instance
+	ShaderHandler::GetInstance()->CreateProgram("BasicShader", "vert.glsl", "frag.glsl");
+	ShaderHandler::GetInstance()->CreateProgram("TextureShader", "vertTextureShader.glsl", "fragTextureShader.glsl");
+	
 	MouseEventDispatcher::GetDispatcher()->RegisterCallbacks(windowPtr->GetWindow());
 
 	BuildScene(new ModelScene());

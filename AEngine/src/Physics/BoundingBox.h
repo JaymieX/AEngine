@@ -4,6 +4,7 @@
 #include "Graphics/Mesh.h"
 #include "Graphics/Model.h"
 #include "Components/Transform.h"
+#include "Rendering/GameObject.h"
 
 constexpr void LimitScale(glm::vec3& v)
 {
@@ -12,15 +13,13 @@ constexpr void LimitScale(glm::vec3& v)
 	v.z = v.z < 1.0f ? v.z / 2.0f : v.z;
 }
 
-struct BoundingBox : Component
+struct BoundingBox final : Component
 {
-	BoundingBox() = default;
-
+	explicit BoundingBox(const std::vector<Mesh>& meshes) : meshes(meshes){}
+	
 	void Start() override
 	{
-		transformPtr = boundEntity->GetComponent<Transform>();
-		
-		auto meshes = boundEntity->GetComponent<Model>()->GetMeshes();
+		transformPtr = boundEntity->GetComponent<Transform>(); 
 		for(const auto& mesh : meshes)
 		{
 			for(auto vertex : mesh.vertices)
@@ -29,15 +28,22 @@ struct BoundingBox : Component
 				Maximum(vertex.position, maximum);
 			}
 		}
+		transformedMinimum = minimum;
+		transformedMaximum = maximum;
 	}
 
-	void Update() override
+	void Update(const float dt) override
 	{
 		auto scaleFactor = transformPtr->scale;
 		LimitScale(scaleFactor);
 		transformedMaximum = maximum * scaleFactor;
 		transformedMinimum = minimum * scaleFactor;
-		std::cout << "Model Scale: "<< glm::to_string(scaleFactor) << std::endl;
+		//std::cout << "Model Scale: "<< glm::to_string(scaleFactor) << std::endl;
+	}
+
+	void Render() override
+	{
+		
 	}
 
 	void Print() const
@@ -55,6 +61,8 @@ struct BoundingBox : Component
 	glm::vec3 minimum = glm::vec3(1.0f);
 	glm::vec3 transformedMaximum = glm::vec3(0.0f);
 	glm::vec3 transformedMinimum  = glm::vec3(1.0f);
+
+	std::vector<Mesh> meshes;
 	
 	Transform* transformPtr = nullptr;
 };

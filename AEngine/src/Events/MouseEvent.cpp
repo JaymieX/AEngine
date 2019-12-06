@@ -56,9 +56,9 @@ void MouseEventListener::OnMouseMovedEvent(double x, double y)
 void MouseEventListener::OnMouseButtonEvent(int btn, int action, int mods)
 {
 	if(action == GLFW_PRESS)
-		OnMousePressedEvent(btn);
+		MouseEventDispatcher::GetDispatcher()->mouseButtonPressedEvent.Execute(btn);
 	else if(action == GLFW_RELEASE)
-		OnMouseReleasedEvent(btn);
+		MouseEventDispatcher::GetDispatcher()->mouseButtonReleasedEvent.Execute(btn);
 }
 
 void MouseEventListener::OnMouseScrollEvent(double y)
