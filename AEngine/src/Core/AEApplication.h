@@ -11,6 +11,7 @@ public:
 	bool Initialize();
 	void Run() const;
 	void ResizeUpdate() const;
+	void Destroy() const;
 
 	static AEApplication* GetInstance();
 
@@ -25,8 +26,6 @@ private:
 	void Render() const;
 	
 	bool sceneActive = false;
-
-	//XrInstance xr_instance = {};
 
 	std::unique_ptr<class IScene> scenePtr;
 	std::unique_ptr<class Window> windowPtr;

@@ -12,6 +12,7 @@ public:
 	virtual void Update(const float dt) override;
 	virtual void Render() const override;
 	virtual void ResizeUpdate() const override;
+	virtual void Destroy() const override;
 
 	void HandleMouseReleasedEvent(int);
 

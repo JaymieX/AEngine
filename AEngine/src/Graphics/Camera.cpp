@@ -53,4 +53,6 @@ void Camera::UpdateCameraOrientation()
 
 	right = glm::normalize(glm::cross(forward, worldUp));
 	up = glm::normalize(glm::cross(right, forward));
+
+	//frustum.CreateFrustum(GetPerspectiveMatrix() * GetViewMatrix());
 }

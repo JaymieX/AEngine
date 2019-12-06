@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Logger.h"
 
-class CollisionHandling;
+class CollisionHandler;
 class Model;
 class EntityManager;
 struct BoundingBox;
@@ -25,7 +25,7 @@ private:
 	std::string name = std::string();
 	std::unique_ptr<Model> modelPtr;
 
-	friend CollisionHandling;
+	friend CollisionHandler;
 	void SetHit(const bool hit, const int mouseBtn)
 	{
 		isHit = hit;

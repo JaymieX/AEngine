@@ -3,7 +3,7 @@
 #include <Core/AEpch.h>
 #include "BoundingBox.h"
 #include "CollisionDetection.h"
-#include "Graphics/Shader.h"
+#include "Graphics/ShaderHandler.h"
 
 struct Ray
 {

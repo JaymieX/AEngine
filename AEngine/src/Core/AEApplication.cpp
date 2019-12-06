@@ -5,7 +5,8 @@
 #include "Scene/IScene.h"
 #include "Scene/ModelScene.h"
 #include "Events/MouseEvent.h"
-#include "Graphics/Shader.h"
+#include "Graphics/ShaderHandler.h"
+#include "Graphics/TextureHandler.h"
 
 std::unique_ptr<AEApplication> AEApplication::instance(nullptr);
 
@@ -95,4 +96,15 @@ void AEApplication::BuildScene(IScene* buildScene)
 void AEApplication::ResizeUpdate() const
 {
 	if (sceneActive) scenePtr->ResizeUpdate();
+}
+
+void AEApplication::Destroy() const
+{
+	if (scenePtr)
+	{
+		scenePtr->Destroy();
+	}
+	TextureHandler::GetInstance()->Destroy();
+	ShaderHandler::GetInstance()->Destroy();
+	glfwTerminate();
 }

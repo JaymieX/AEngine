@@ -21,6 +21,7 @@ public:
 
 	void Update(float dt);
 	void Render();
+	void Destroy() const;
 
 	static std::map<std::string, std::unique_ptr<GameObject>>& GetGameObjects() { return gameObjects; }
 private:

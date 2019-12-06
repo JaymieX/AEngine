@@ -15,9 +15,7 @@ SceneGraph* SceneGraph::GetInstance()
 }
 
 SceneGraph::~SceneGraph()
-{
-	//gameObjects.clear();
-}
+{}
 
 void SceneGraph::AddModel(Model* modelComponent)
 {
@@ -34,7 +32,7 @@ void SceneGraph::AddGameObject(GameObject* gameObjectPtr, std::string name)
 	if(gameObjects.find(name) != gameObjects.end()) return;
 	if(name.empty()) name = "GameObject_" + gameObjects.size();
 	gameObjects.emplace(std::make_pair(name, std::unique_ptr<GameObject>(gameObjectPtr)));
-	CollisionHandling::GetInstance()->AddGameObject(gameObjectPtr);
+	CollisionHandler::GetInstance()->AddGameObject(gameObjectPtr);
 }
 
 GameObject* SceneGraph::GetGameObjects(const std::string name)
@@ -53,11 +51,17 @@ void SceneGraph::Update(const float dt)
 
 void SceneGraph::Render()
 {
-	CollisionHandling::GetInstance()->Render();
+	CollisionHandler::GetInstance()->Render();
 	for(const auto shaderModel : shaderModels) 
 	{
 		glUseProgram(shaderModel.first);
 		for(auto model : shaderModel.second)
 			model->Render();
 	}
+}
+
+void SceneGraph::Destroy() const 
+{
+	gameObjects.clear();
+	shaderModels.clear();
 }

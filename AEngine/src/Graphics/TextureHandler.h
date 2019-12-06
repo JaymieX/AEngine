@@ -31,6 +31,7 @@ public:
 	}*/
 
 	static void CreateTexture(const std::string& textureName, const std::string& path);
+	void Destroy() const;
 
 private:
 	TextureHandler() = default;

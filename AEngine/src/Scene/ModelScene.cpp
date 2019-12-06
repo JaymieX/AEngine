@@ -5,15 +5,12 @@
 #include "Graphics/Light.h"
 #include "Events/MouseEvent.h"
 #include "Physics/BoundingBox.h"
-#include "Graphics/Shader.h"
+#include "Graphics/ShaderHandler.h"
 #include "Rendering/SceneGraph.h"
 #include "Physics/CollisionHandler.h"
 
 bool ModelScene::Initialize()
 {
-	static const auto DISTANCE_TO_MODEL = 5.0f;
-	MouseEventListener::scrollPosition = DISTANCE_TO_MODEL;
-	
 	sceneEntityManagerPtr = std::make_unique<EntityManager>();
 	cameraEntityPtr = sceneEntityManagerPtr->CreateAndAddEntity();
 	lightEntityPtr = sceneEntityManagerPtr->CreateAndAddEntity();
@@ -26,21 +23,33 @@ bool ModelScene::Initialize()
 	cameraEntityPtr->AddComponent<Transform>(glm::vec3(0.0f));
 	cameraEntityPtr->AddComponent<Camera>(45.0f, glm::vec2(0.2f, 50.0f), false)->AddLight(lightEntityPtr);
 
+	//Models
 	const ModelData appleModelData { cameraEntityPtr, ShaderHandler::GetInstance()->GetShaderProgram("TextureShader"), "src/Resources/Models/Apple.obj", "src/Resources/Models/Apple.mtl" };
 	const auto appleModelPtr = new Model(appleModelData);
 	const ModelData diceModelData { cameraEntityPtr, ShaderHandler::GetInstance()->GetShaderProgram("TextureShader"), "src/Resources/Models/Dice.obj", "src/Resources/Models/Dice.mtl" };
 	const auto diceModelPtr = new Model(diceModelData);
 	
-	CollisionHandling::GetInstance()->CreateHandler(cameraEntityPtr->GetComponent<Camera>());
+	//Creating Collision Handle
+	CollisionHandler::GetInstance()->CreateHandler(cameraEntityPtr->GetComponent<Camera>());
 
+	//Adding Models & GameObjects to SceneGraph
 	SceneGraph::GetInstance()->AddModel(appleModelPtr);
 	SceneGraph::GetInstance()->AddModel(diceModelPtr);
 	SceneGraph::GetInstance()->AddGameObject(new GameObject(sceneEntityManagerPtr.get(), TransformData{glm::vec3(2.0f, 0.0f, 2.0f)}, appleModelPtr), "Apple");
 	SceneGraph::GetInstance()->AddGameObject(new GameObject(sceneEntityManagerPtr.get(), TransformData{glm::vec3(-2.0f, 0.0f, 2.0f)}, diceModelPtr), "Dice");
 
+	//Subscribing to Mouse Released Event
 	MouseEventDispatcher::GetDispatcher()->mouseButtonReleasedEvent.Subscribe<ModelScene>(this, &ModelScene::HandleMouseReleasedEvent);
 	
 	return true;
+}
+
+void ModelScene::Destroy() const
+{
+	cameraEntityPtr->Destroy();
+	lightEntityPtr->Destroy();
+	SceneGraph::GetInstance()->Destroy();
+	sceneEntityManagerPtr->SeekAndDestroy();
 }
 
 void ModelScene::Update(const float dt)
@@ -78,6 +87,6 @@ void ModelScene::ResizeUpdate() const
 
 void ModelScene::HandleMouseReleasedEvent(const int button)
 {
-	CollisionHandling::GetInstance()->Update(MouseEventListener::mousePosition, button);
+	CollisionHandler::GetInstance()->Update(MouseEventListener::mousePosition, button);
 }
 

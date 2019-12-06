@@ -3,15 +3,15 @@
 class GameObject;
 class Camera;
 
-class CollisionHandling
+class CollisionHandler
 {
 public:
-	CollisionHandling(const CollisionHandling&) = delete;
-	CollisionHandling(CollisionHandling&&) = delete;
-	CollisionHandling& operator=(const CollisionHandling&) = delete;
-	CollisionHandling& operator=(CollisionHandling&&) = delete;
+	CollisionHandler(const CollisionHandler&) = delete;
+	CollisionHandler(CollisionHandler&&) = delete;
+	CollisionHandler& operator=(const CollisionHandler&) = delete;
+	CollisionHandler& operator=(CollisionHandler&&) = delete;
 
-	static CollisionHandling* GetInstance();
+	static CollisionHandler* GetInstance();
 
 	void CreateHandler(Camera*);
 	void AddGameObject(GameObject*);
@@ -20,14 +20,14 @@ public:
 	void Destroy();
 
 private:
-	CollisionHandling() = default;
-	~CollisionHandling() = default;
+	CollisionHandler() = default;
+	~CollisionHandler() = default;
 
 	static std::vector<GameObject*> colliders;
 	static std::vector<GameObject*> previousCollisions;
 	static Camera* cameraPtr;
 	static class Ray ray;
 
-	static std::unique_ptr<CollisionHandling> instance;
-	friend std::default_delete<CollisionHandling>;
+	static std::unique_ptr<CollisionHandler> instance;
+	friend std::default_delete<CollisionHandler>;
 };

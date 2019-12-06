@@ -14,6 +14,6 @@ public:
 	static bool RayCastHit(Ray&, BoundingBox*);
 
 private:
-	static bool RayCastCheckAxis(float, float, float, float, float, float);
+	static bool RayCastCheckAxis(float, float, float, float, float&, float&);
 };
 

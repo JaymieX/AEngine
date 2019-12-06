@@ -10,14 +10,19 @@ std::map<std::string, std::unique_ptr<Texture>> TextureHandler::textures = std::
 
 TextureHandler::~TextureHandler()
 {
-	//if(!textures.empty() && textures.begin()->second != nullptr)
-	//	textures.clear();
+	
 }
 
 TextureHandler* TextureHandler::GetInstance()
 {
 	if (!instance) instance = std::unique_ptr<TextureHandler>(new TextureHandler());
 	return instance.get();
+}
+
+void TextureHandler::Destroy() const
+{
+	if(!textures.empty() && textures.begin()->second != nullptr)
+		textures.clear();
 }
 
 void TextureHandler::CreateTexture(const std::string& textureName, const std::string& path)

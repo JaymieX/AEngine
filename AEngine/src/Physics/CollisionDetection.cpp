@@ -4,36 +4,36 @@
 
 Ray CollisionDetection::ViewportPointToRay(glm::vec2 mousePos, glm::vec2 screenSize, Camera* camera)
 {
-	glm::vec4 rayClip;
-	rayClip.x = (2.0f * mousePos.x) / screenSize.x - 1.0f;
-	rayClip.y = (2.0f * mousePos.y) / screenSize.y - 1.0f;
-	rayClip.z = -1.0f;
-	rayClip.w = 1.0f;
-	//
-	//rayClip.x = mousePos.x * 2.0f / screenSize.x - 1.0f;
-	//rayClip.y = 1.0f - mousePos.y * 1.0f / screenSize.y;
-	//rayClip.z = 0;
-	//rayClip.w = 1;
-
-	auto rayEye = glm::inverse(camera->GetPerspectiveMatrix()) * rayClip;
-	rayEye.z = -1.0f;
-	rayEye.w = 0.0f;
+	glm::vec4 startPoint;
+	startPoint.x = (mousePos.x / screenSize.x - 0.5f) * 2.0f;
+	startPoint.y = (mousePos.y / screenSize.y - 0.5f) * 2.0f;
+	startPoint.z = -1.0f;
+	startPoint.w = 1.0f;
 	
-	const auto direction = glm::normalize(glm::vec3(glm::inverse(camera->GetViewMatrix()) * rayEye));
+	glm::vec4 endPoint;
+	endPoint.x = (mousePos.x / screenSize.x - 0.5f) * 2.0f;
+	endPoint.y = (mousePos.y / screenSize.y - 0.5f) * 2.0f;
+	endPoint.z = 0.0f;
+	endPoint.w = 1.0f;
 
-	const auto origin = camera->boundEntity->GetComponent<Transform>()->position;
-	//const auto rayWorldSpace = glm::inverse(camera->GetViewMatrix()) * glm::inverse(camera->GetPerspectiveMatrix()) * rayClip;
-	//const auto direction = glm::normalize(glm::vec3(rayWorldSpace) - origin);
-	const auto rayDimensions = camera->GetClippingPlanes();
+	auto worldSpace = glm::inverse(camera->GetPerspectiveMatrix() * camera->GetViewMatrix());
+
+	startPoint = startPoint * worldSpace;
+	endPoint = endPoint * worldSpace;
+
+	startPoint = startPoint / startPoint.w;
+	endPoint = endPoint / endPoint.w;
+
+	const auto direction = glm::normalize(startPoint - endPoint);
 	
-	return Ray(origin, direction, rayDimensions);
+	return Ray(startPoint, direction, camera->GetClippingPlanes());
 }
 
 bool CollisionDetection::RayCastHit(Ray& ray, BoundingBox* boundingBox)
 {
 	auto model = boundingBox->boundEntity->GetComponent<Transform>()->GetTransformMatrix();
-	const auto tMin = ray.dimensions.x;
-	const auto tMax = ray.dimensions.y;
+	auto tMin = ray.dimensions.x;
+	auto tMax = ray.dimensions.y;
 
 	const auto delta = glm::vec3(model[3]) - ray.origin;
 	
@@ -56,9 +56,9 @@ bool CollisionDetection::RayCastHit(Ray& ray, BoundingBox* boundingBox)
 	return true;
 }
 
-bool CollisionDetection::RayCastCheckAxis(const float e, const float f, const float min, const float max, float rayMin, float rayMax)
+bool CollisionDetection::RayCastCheckAxis(const float e, const float f, const float min, const float max, float& rayMin, float& rayMax)
 {
-	if(abs(f) > 0.001)
+	if(fabs(f) > 0.001)
 	{
 		auto t1 = (e + min) / f;
 		auto t2 = (e + max) / f;
@@ -67,7 +67,7 @@ bool CollisionDetection::RayCastCheckAxis(const float e, const float f, const fl
 		rayMin = t1 > rayMin ? t1 : rayMin;
 		if(rayMax < rayMin) return false;
 	}
-	if(-e + min > 0) return false;
-	if(-e + max < 0) return false;
+	if(-e + min > 0.0f) return false;
+	if(-e + max < 0.0f) return false;
 	return true;
 }

@@ -13,10 +13,7 @@ ShaderHandler* ShaderHandler::GetInstance() {
 
 ShaderHandler::~ShaderHandler()
 {
-	//if (!programs.empty()){
-	//	for (const auto& entry : programs) glDeleteProgram(entry.second);
-	//	programs.clear();
-	//}
+
 }
 
 GLuint ShaderHandler::GetShaderProgram(const char* shaderName)
@@ -52,7 +49,7 @@ void ShaderHandler::CreateProgram(const char* shaderName, const char* vertFilePa
 	}
 
 	programs.emplace(std::make_pair(shaderName, programId));
-	
+
 	glDeleteShader(vertShaderId);
 	glDeleteShader(fragShaderId);
 }
@@ -80,6 +77,14 @@ GLuint ShaderHandler::CreateShader(const GLenum shaderType, std::string& shaderS
 	}
 
 	return shader;
+}
+
+void ShaderHandler::Destroy()
+{
+	if (!programs.empty()) {
+		for (const auto& entry : programs) glDeleteProgram(entry.second);
+		programs.clear();
+	}
 }
 
 

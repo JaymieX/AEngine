@@ -71,10 +71,10 @@ void ObjLoader::LoadMeshData(const std::string& fileName)
 
 		// NEW MATERIAL
 		else if (line.substr(0, 7) == "usemtl ") {
-			LoadMaterial(line.substr(7));
 			if (!indices.empty()) {
 				PostProcessing();
 			}
+			LoadMaterial(line.substr(7));
 		}
 	}
 	PostProcessing();

@@ -2,6 +2,7 @@
 
 #include "Systems/EntityComponent.h"
 #include "Components/Transform.h"
+#include <Rendering\Frustum.h>
 
 class Camera final : public Component
 {
@@ -31,7 +32,7 @@ private:
 
 	std::vector<Entity*> lights;
 
-
+	Frustum frustum;
 	Transform* transformPtr;
 	bool lookAtEnabled = true;
 	float fov = 0;
