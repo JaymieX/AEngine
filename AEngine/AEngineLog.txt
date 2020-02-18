@@ -7180,3 +7180,8 @@ Out of resource error.
 [Trace C:\Development\C++\AEngine\AEngine\src\Core\Timer.h : 35] 60fps | 16.684800ms
 [Trace C:\Development\C++\AEngine\AEngine\src\Core\Timer.h : 35] 60fps | 15.712800ms
 [Trace C:\Development\C++\AEngine\AEngine\src\Core\Timer.h : 35] 60fps | 17.429800ms
+[Trace E:\Development\C++\AEngine\AEngine\src\Core\Timer.h : 35] 26fps | 31.619400ms
+[Trace E:\Development\C++\AEngine\AEngine\src\Core\Timer.h : 35] 19fps | 99.914100ms
+[Trace E:\Development\C++\AEngine\AEngine\src\Core\Timer.h : 35] 45fps | 16.369900ms
+[Trace E:\Development\C++\AEngine\AEngine\src\Core\Timer.h : 35] 60fps | 16.778100ms
+[Trace E:\Development\C++\AEngine\AEngine\src\Core\Timer.h : 35] 60fps | 16.985700ms

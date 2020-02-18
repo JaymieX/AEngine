@@ -36,7 +36,5 @@ void Logger::Log(const Logger::MessageSeverity severity, const std::string& mess
 		msg = "";
 	}
 
-	file.flush();
-
 	file.close();
 }

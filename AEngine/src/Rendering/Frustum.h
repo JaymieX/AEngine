@@ -8,7 +8,7 @@ struct Plane {
 	float distance;
 
 	Plane() = default;
-	Plane(glm::vec4 plane) : plane(plane), normal(glm::vec3(plane)), distance(plane.w) {}
+	explicit Plane(const glm::vec4 plane) : plane(plane), normal(glm::vec3(plane)), distance(plane.w) {}
 };
 
 class Frustum {

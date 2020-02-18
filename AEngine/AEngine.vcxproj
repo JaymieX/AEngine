@@ -112,6 +112,7 @@
     <ClInclude Include="src\Graphics\Mesh.h" />
     <ClInclude Include="src\Graphics\Model.h" />
     <ClInclude Include="src\Graphics\ObjLoader.h" />
+    <ClInclude Include="src\Graphics\Shader.h" />
     <ClInclude Include="src\Graphics\ShaderHandler.h" />
     <ClInclude Include="src\Graphics\TextureHandler.h" />
     <ClInclude Include="src\Physics\BoundingBox.h" />
@@ -142,6 +143,7 @@
     <ClCompile Include="src\Graphics\MaterialLoader.cpp" />
     <ClCompile Include="src\Graphics\Model.cpp" />
     <ClCompile Include="src\Graphics\ObjLoader.cpp" />
+    <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\ShaderHandler.cpp" />
     <ClCompile Include="src\Graphics\TextureHandler.cpp" />
     <ClCompile Include="src\Physics\CollisionDetection.cpp" />

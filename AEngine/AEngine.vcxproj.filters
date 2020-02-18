@@ -78,6 +78,12 @@
     <ClInclude Include="src\Graphics\ObjLoader.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphics\Shader.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\ShaderHandler.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\TextureHandler.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -92,6 +98,9 @@
     </ClInclude>
     <ClInclude Include="src\Physics\Ray.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Frustum.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Rendering\GameObject.h">
       <Filter>Rendering</Filter>
@@ -117,10 +126,6 @@
     <ClInclude Include="src\Window\Window.h">
       <Filter>Window</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\ShaderHandler.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Frustum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\AEApplication.cpp">
@@ -156,6 +161,12 @@
     <ClCompile Include="src\Graphics\ObjLoader.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\Shader.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\ShaderHandler.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="src\Graphics\TextureHandler.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -164,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="src\Physics\CollisionHandler.cpp">
       <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\Frustum.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Rendering\GameObject.cpp">
       <Filter>Rendering</Filter>
@@ -183,9 +197,5 @@
     <ClCompile Include="src\Window\Window.cpp">
       <Filter>Window</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\ShaderHandler.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Frustum.cpp" />
   </ItemGroup>
 </Project>

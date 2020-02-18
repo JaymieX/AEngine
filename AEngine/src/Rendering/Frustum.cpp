@@ -45,34 +45,32 @@ void Frustum::CreateFrustum(glm::mat4 frustumMatrix)
 		frustumMatrix[3][3] + frustumMatrix[3][0]
 	));
 
-	for (int i = 0; i < 6; i++) {
-		frustumPlanes[i].distance /= glm::length(frustumPlanes[i].normal);
-		frustumPlanes[i].normal = glm::normalize(frustumPlanes[i].normal);
-		frustumPlanes[i] = glm::normalize(frustumPlanes[i].plane);
+	for (auto& frustumPlane : frustumPlanes)
+	{
+		frustumPlane.distance /= glm::length(frustumPlane.normal);
+		frustumPlane.normal = glm::normalize(frustumPlane.normal);
+		//frustumPlane = glm::normalize(frustumPlane.plane);
 	}
 }
 
 bool Frustum::Cull(BoundingBox* boundingBox)
 {
-	int result = true;
+	for (auto& frustumPlane : frustumPlanes)
+	{
+		if (frustumPlane.distance + glm::dot(frustumPlane.normal, GetPositiveVertex(frustumPlane.normal, boundingBox)) < 0.0f) {
+			return false;
+		}
+		if (frustumPlane.distance + glm::dot(frustumPlane.normal, GetNegativeVertex(frustumPlane.normal, boundingBox)) < 0.0f) {
+			return true;
+		}
+	}
 
-	//for (int i = 0; i < 6; i++)
-	//{
-	//
-	//	if (frustumPlanes[i].distance + glm::dot(frustumPlanes[i].normal, GetPositiveVertex(frustumPlanes[i].normal, box_)) < 0.0f) {
-	//		return false;
-	//	}
-	//	else if (frustumPlanes[i].distance + glm::dot(frustumPlanes[i].normal, GetNegativeVertex(frustumPlanes[i].normal, box_)) < 0.0f) {
-	//		return true;
-	//	}
-	//}
-
-	return result;
+	return true;
 }
 
 glm::vec3 Frustum::GetPositiveVertex(const glm::vec3 normal, BoundingBox* boundingBox)
 {
-	glm::vec3 positiveVertex = boundingBox->transformedMinimum;
+	auto positiveVertex = boundingBox->transformedMinimum;
 
 	if (normal.x >= 0.f) positiveVertex.x = boundingBox->transformedMaximum.x;
 	if (normal.y >= 0.f) positiveVertex.y = boundingBox->transformedMaximum.y;
@@ -83,7 +81,7 @@ glm::vec3 Frustum::GetPositiveVertex(const glm::vec3 normal, BoundingBox* boundi
 
 glm::vec3 Frustum::GetNegativeVertex(const glm::vec3 normal, BoundingBox* boundingBox)
 {
-	glm::vec3 negativeVertex = boundingBox->transformedMaximum;
+	auto negativeVertex = boundingBox->transformedMaximum;
 
 	if (normal.x >= 0.f) negativeVertex.x = boundingBox->transformedMinimum.x;
 	if (normal.y >= 0.f) negativeVertex.y = boundingBox->transformedMinimum.y;
